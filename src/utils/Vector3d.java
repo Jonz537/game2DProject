@@ -38,4 +38,13 @@ public class Vector3d {
     public double distance(Vector3d vector3d) {
         return Math.sqrt(Math.pow((x + vector3d.x), 2) + Math.pow((y + vector3d.y), 2) + Math.pow((z + vector3d.z), 2));
     }
+
+    @Override
+    public String toString() {
+        return "Vector3d{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

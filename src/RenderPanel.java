@@ -175,8 +175,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                 (float) (center.getY()),
                 (float) radius,// Radius
                 new float[]{0.0f, 1.0f},   // Fractions
-                new Color[]{new Color(255, 0, 0, lightLevel),
-                        new Color(0, 0, 0, darkLevel)});
+                new Color[]{new Color(0, 0, 0, lightLevel),
+                        new Color(50, 0, 0, darkLevel)});
     }
 
 
@@ -208,7 +208,12 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
             case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
             case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
+            case KeyEvent.VK_Q -> printDebugInfo();
         }
+    }
+
+    private void printDebugInfo() {
+        System.out.println(gameController.getSpawnPoint());
     }
 
     @Override

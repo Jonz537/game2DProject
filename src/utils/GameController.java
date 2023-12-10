@@ -37,4 +37,8 @@ public class GameController {
     public void updateImages() {
         model.updateImages();
     }
+
+    public Vector3d getSpawnPoint() {
+        return model.getSpawnPoint();
+    }
 }

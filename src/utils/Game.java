@@ -8,9 +8,10 @@ public class Game {
 
     protected Player player;
     protected ArrayList<GameObject> entities = new ArrayList<>();
+    protected Vector3d spawnPoint = new Vector3d(0,0,0);
 
     public Game() {
-        player = new Player(0, 0, 50);
+        player = new Player(spawnPoint, 50);
         entities.add(new Fire(new Vector3d(0, -130, 0), 150));
 
         entities.add(new Fire(new Vector3d(100 + Platform.IMG_LENGHT * 3, -30, 0), 350));
@@ -47,6 +48,9 @@ public class Game {
                 playerFloor = true;
                 break;
             }
+            if (go instanceof  Tent && player.getCollisionBox().intersects(go.getCollisionBox())) {
+                setSpawnPoint(go.getPos());
+            }
         }
 
         if (!playerFloor) {
@@ -58,8 +62,15 @@ public class Game {
         entities.forEach(GameObject::animate);
     }
 
-
     public Player getPlayer() {
         return player;
+    }
+
+    public Vector3d getSpawnPoint() {
+        return spawnPoint;
+    }
+
+    public void setSpawnPoint(Vector3d spawnPoint) {
+        this.spawnPoint = spawnPoint;
     }
 }
