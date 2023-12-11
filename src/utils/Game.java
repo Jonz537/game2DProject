@@ -34,7 +34,12 @@ public class Game {
 
     public void update() {
         entities.forEach(GameObject::update);
+        checkOutofBounds();
         //TODO destroy stuff when out of bounds
+    }
+
+    private void checkOutofBounds() {
+        entities.forEach(gameObject -> gameObject.setToRender(player.getPos()));
     }
 
     public void checkCollisions() {

@@ -1,3 +1,4 @@
+import renderer.RenderPanel;
 import utils.Game;
 import utils.GameController;
 

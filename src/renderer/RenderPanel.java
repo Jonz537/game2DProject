@@ -1,3 +1,5 @@
+package renderer;
+
 import gameobjects.*;
 import utils.GameController;
 
@@ -23,7 +25,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
     //TODO debug mode
     int lightLevel = 25, darkLevel = 255;
-    protected double worldSize = 1000., scaler = Math.min(getWidth(), getHeight());
+    public final static double worldSize = 1000.;
+    protected double scaler, maxScaler;
     double torchRadius = worldSize / 3.5;
     protected Point2D mousePos = new Point(0, 0);
 
@@ -71,8 +74,9 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // world scaling
-        worldSize = 1000.;
         scaler = Math.min(getWidth(), getHeight());
+        maxScaler = Math.max(getWidth(), getHeight());
+
         graphics.translate(getWidth() / 2. - gameController.getPlayer().getX() * scaler / worldSize,
                 getHeight() / 2.);
         graphics.scale(scaler / worldSize, scaler / worldSize);
@@ -87,7 +91,9 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
         // drawing entities
         for (GameObject go: gameController.getEntities()) {
-            drawGameObject(graphics, go);
+            if (go.isToRender()) {
+                drawGameObject(graphics, go);
+            }
         }
         // drawing torchlight
         lightRender(graphics);
@@ -111,9 +117,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     }
 
     private void lightRender(Graphics2D graphics) {
-        // TODO fix this again
-        Rectangle2D.Double screenDark = new Rectangle2D.Double((-worldSize / 2) + gameController.getPlayer().getX(),
-                (-worldSize / 2), worldSize, worldSize);
+        Rectangle2D.Double screenDark = new Rectangle2D.Double((-worldSize * maxScaler / 2) + gameController.getPlayer().getX(),
+                (-worldSize * maxScaler / 2), worldSize * maxScaler, worldSize * maxScaler);
 
         Point2D mousePosScaled = pixelsToPos(mousePos);
 
