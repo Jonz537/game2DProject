@@ -49,6 +49,11 @@ public class Fire extends GameObject {
     public void animate() {
         currentFrame = (currentFrame + 1) % 4;
         image = frames[currentFrame];
+
+        lightArea = new Area(new Ellipse2D.Double(getX() + (getSize() - lightRadius) / 2,
+                getY() + (getSize() - lightRadius) / 2,
+                lightRadius, lightRadius));
+
     }
 
     public double getLightRadius() {

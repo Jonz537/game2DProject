@@ -10,7 +10,8 @@ import java.io.IOException;
 
 public class Bullet extends GameObject {
 
-    // TODO fix this (fr fr)
+    private int ttl = 120;
+
     public Bullet(Vector3d pos, int size, double vecX, double vecY, double accY) {
         super(new Vector3d(pos), size, 0, accY);
         vel = new Vector3d(vecX, vecY, 0);
@@ -29,5 +30,10 @@ public class Bullet extends GameObject {
         pos.x += vel.x;
         pos.y += vel.y;
         collisionBox = new Rectangle2D.Double(pos.x - (double) size / 2, pos.y - (double) size / 2, size, size);
+        ttl--;
+    }
+
+    public boolean timeOut() {
+        return ttl <= 0;
     }
 }

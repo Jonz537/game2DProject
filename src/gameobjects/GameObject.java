@@ -13,7 +13,6 @@ public class GameObject {
     protected Vector3d pos, vel;
     protected Rectangle2D.Double collisionBox;
     protected int size;
-    protected boolean toRender = true;
     public double accX = 0., accY = 0.2;
     public Image image;
 
@@ -60,10 +59,6 @@ public class GameObject {
         this.accY = accY;
     }
 
-    public boolean isToRender() {
-        return toRender;
-    }
-
     public Vector3d getPos() {
         return pos;
     }
@@ -96,6 +91,10 @@ public class GameObject {
         pos.y = newPos;
     }
 
+    public void setPos(Vector3d pos) {
+        this.pos = new Vector3d(pos);
+    }
+
     public void setVelX(double newVel) {
         vel.x = newVel;
     }
@@ -110,11 +109,6 @@ public class GameObject {
 
     public Rectangle2D.Double getCollisionBox() {
         return collisionBox;
-    }
-
-    public void setToRender(Vector3d playerPos) {
-        // TODO fix render distance
-//        toRender = ( pos.x > playerPos.getX() - RenderPanel.worldSize);
     }
 
     public void update() {

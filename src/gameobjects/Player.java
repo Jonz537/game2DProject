@@ -17,23 +17,6 @@ public class Player extends GameObject {
     public int jumpToken = 0;
     public final double jumpSpeed = 35;
 
-    public Player(int x, int y, int size) {
-        super(new Vector3d(x, y,0), size);
-        vel = new Vector3d(0,0,0);
-        collisionBox = new Rectangle2D.Double(pos.x, pos.y, size, size);
-        this.size = size;
-        accX = 0.5;
-
-        try {
-            // TODO find image
-            image = ImageIO.read(new File("./assets/player.png"))
-                    .getScaledInstance((size), size, Image.SCALE_SMOOTH);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     public Player(Vector3d pos, int size) {
         super(new Vector3d(pos), size);
         vel = new Vector3d(0,0,0);

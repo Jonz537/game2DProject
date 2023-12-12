@@ -3,6 +3,8 @@ package utils;
 import gameobjects.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Game {
 
@@ -34,12 +36,33 @@ public class Game {
 
     public void update() {
         entities.forEach(GameObject::update);
-        checkOutofBounds();
-        //TODO destroy stuff when out of bounds
+        checkPlayerDeath();
+        checkToDestroyed();
     }
 
-    private void checkOutofBounds() {
-        entities.forEach(gameObject -> gameObject.setToRender(player.getPos()));
+    private void checkPlayerDeath() {
+        for (GameObject go: entities) {
+            if (go instanceof Player) {
+                if (go.getY() < -600) {
+                    go.setVelY(0);
+                    go.setPos(spawnPoint);
+                }
+            }
+        }
+    }
+
+    private void checkToDestroyed() {
+        Set<Bullet> toBeDestroyed = new HashSet<>();
+        for (GameObject go: entities) {
+            if (go instanceof Bullet && ((Bullet) go).timeOut()) {
+                toBeDestroyed.add((Bullet) go);
+            }
+        }
+
+        for (Bullet bullet: toBeDestroyed) {
+            entities.remove(bullet);
+        }
+
     }
 
     public void checkCollisions() {
@@ -47,7 +70,8 @@ public class Game {
 
         boolean playerFloor = false;
         for (GameObject go: getEntities()) {
-            if (go instanceof Platform && player.getCollisionBox().intersects(go.getCollisionBox())) {
+            if (go instanceof Platform && player.getCollisionBox().intersects(go.getCollisionBox())
+            && go.getCollisionBox().getY() + go.getCollisionBox().getHeight() < player.getY()) {
                 player.setVelY(0);
                 player.accY = 0;
                 playerFloor = true;
@@ -76,6 +100,6 @@ public class Game {
     }
 
     public void setSpawnPoint(Vector3d spawnPoint) {
-        this.spawnPoint = spawnPoint;
+        this.spawnPoint = new Vector3d(spawnPoint.getX(), spawnPoint.getY() + 50, 0);
     }
 }

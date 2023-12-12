@@ -91,9 +91,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
         // drawing entities
         for (GameObject go: gameController.getEntities()) {
-            if (go.isToRender()) {
-                drawGameObject(graphics, go);
-            }
+            drawGameObject(graphics, go);
         }
         // drawing torchlight
         lightRender(graphics);
@@ -142,7 +140,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             if (torchCircle.isEmpty()) {
                 Point fireCenter = new Point((int) (fire.getX() + fire.getSize() / 2), (int) (fire.getY() + fire.getSize() / 2));
 
-                graphics.setPaint(createRadialLight(fireCenter, ((Fire) fire).getLightRadius()));
+                graphics.setPaint(createRadialLight(fireCenter, ((Fire) fire).getLightRadius(), new Color(75, 0, 0, darkLevel)));
                 graphics.fill(((Fire) fire).getLightArea());
             } else {
                 drawTorchAlone = false;
@@ -152,15 +150,15 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                         (int) ((mousePosScaled.getY() + (fire.getY() + fire.getSize() / 2)) / 2));
                 double combinedRadius = (2 * torchRadius) + (((Fire) fire).getLightRadius());
 
-                graphics.setPaint(createRadialLight(averageCenter, combinedRadius));
+                graphics.setPaint(createRadialLight(averageCenter, combinedRadius, new Color(196, 67, 3, darkLevel)));
                 graphics.fillOval((int) (((averageCenter.getX() - (combinedRadius) + fire.getX()) / 2)),
                         (int) (((averageCenter.getY() - combinedRadius + fire.getY()) / 2)),
                         (int) combinedRadius, (int) combinedRadius);
             }
         }
-
+        new Color(121, 67, 3);
         if (drawTorchAlone) {
-            graphics.setPaint(createRadialLight((Point) mousePosScaled, torchRadius));
+            graphics.setPaint(createRadialLight((Point) mousePosScaled, torchRadius, new Color(121, 67, 3, darkLevel)));
             graphics.fillOval((int) (mousePosScaled.getX() - torchRadius / 2.),
                     (int) (mousePosScaled.getY() - torchRadius / 2.),
                     (int) torchRadius, (int) torchRadius);
@@ -174,14 +172,14 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         graphics.fill(square);
     }
 
-    private RadialGradientPaint createRadialLight(Point center, double radius) {
+    private RadialGradientPaint createRadialLight(Point center, double radius, Color color) {
         return new RadialGradientPaint(
                 (float) (center.getX()),
                 (float) (center.getY()),
                 (float) radius,// Radius
                 new float[]{0.0f, 1.0f},   // Fractions
                 new Color[]{new Color(0, 0, 0, lightLevel),
-                        new Color(50, 0, 0, darkLevel)});
+                        color});
     }
 
 
