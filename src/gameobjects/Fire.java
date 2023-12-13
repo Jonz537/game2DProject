@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -17,18 +18,16 @@ public class Fire extends GameObject {
     private Area lightArea;
     private int currentFrame = 0;
 
-    private static Image[] frames;
+    private static BufferedImage[] frames;
 
     {
         try {
-            frames = new Image[]{ImageIO.read(new File("./assets/fire_0.png"))
-                    .getScaledInstance((size), size, Image.SCALE_SMOOTH),
-                    ImageIO.read(new File("./assets/fire_1.png"))
-                            .getScaledInstance((size), size, Image.SCALE_SMOOTH),
-                    ImageIO.read(new File("./assets/fire_2.png"))
-                            .getScaledInstance((size), size, Image.SCALE_SMOOTH),
-                    ImageIO.read(new File("./assets/fire_3.png"))
-                            .getScaledInstance((size), size, Image.SCALE_SMOOTH),};
+            frames = new BufferedImage[]{
+                    imageToBuffered(ImageIO.read(new File("./assets/fire_0.png")).getScaledInstance((size), size, Image.SCALE_SMOOTH)),
+                    imageToBuffered(ImageIO.read(new File("./assets/fire_1.png")).getScaledInstance((size), size, Image.SCALE_SMOOTH)),
+                    imageToBuffered(ImageIO.read(new File("./assets/fire_2.png")).getScaledInstance((size), size, Image.SCALE_SMOOTH)),
+                    imageToBuffered(ImageIO.read(new File("./assets/fire_3.png")).getScaledInstance((size), size, Image.SCALE_SMOOTH)),
+            };
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +39,7 @@ public class Fire extends GameObject {
                 getY() + (getSize() - lightRadius) / 2,
                 lightRadius, lightRadius));
         this.lightRadius = lightRadius;
-        this.collisionBox = new Rectangle2D.Double(pos.x, pos.y, 50, 50);
+        this.collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), 50, 50);
         currentFrame = new Random().nextInt(0, 4);
         image = frames[currentFrame];
     }

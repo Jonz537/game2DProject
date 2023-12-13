@@ -18,18 +18,17 @@ public class Platform extends GameObject {
     public Platform(Vector3d pos, int lenght) {
         super(pos, new Vector3d(0,0,0), null, lenght, 0, 0);
 
-        collisionBox = new Rectangle2D.Double(pos.x, pos.y + (double) (3 * height) / 4 - 4, size, (double) height / 4);
+        collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY() + (double) (3 * height) / 4 - 4, size, (double) height / 4);
         try {
-            // TODO find image
-            image = ImageIO.read(new File("./assets/platform.png"))
-                    .getScaledInstance(IMG_LENGHT, height, Image.SCALE_SMOOTH);
+            image = imageToBuffered(ImageIO.read(new File("./assets/platform.png"))
+                    .getScaledInstance(IMG_LENGHT, height, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Image getImage() {
+    public BufferedImage imageToBuffered(Image imageToTransform) {
         int imageTimes = (size / IMG_LENGHT);
         BufferedImage bimage = new BufferedImage(size, 2 * height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D bGr = bimage.createGraphics();
@@ -39,7 +38,7 @@ public class Platform extends GameObject {
         transform.scale(1, -1);
 
         for (int i = 0 ; i < imageTimes; i++) {
-            bGr.drawImage(image, transform, null);
+            bGr.drawImage(imageToTransform, transform, null);
             transform.translate(IMG_LENGHT, 0);
         }
 

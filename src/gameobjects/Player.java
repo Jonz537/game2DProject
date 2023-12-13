@@ -21,14 +21,14 @@ public class Player extends GameObject {
     public Player(Vector3d pos, int size) {
         super(new Vector3d(pos), size);
         vel = new Vector3d(0,0,0);
-        collisionBox = new Rectangle2D.Double(pos.x, pos.y, size, size);
+        collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), size, size);
         this.size = size;
         accX = 0.5;
 
         try {
-            // TODO find image
-            image = ImageIO.read(new File("./assets/player.png"))
-                    .getScaledInstance((size), size, Image.SCALE_SMOOTH);
+            // TODO find images
+            image = imageToBuffered(ImageIO.read(new File("./assets/player.png"))
+                    .getScaledInstance((size), size, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -38,14 +38,14 @@ public class Player extends GameObject {
     @Override
     public void update() {
         // TODO fix value for better movement
-        vel.x = (Math.abs(vel.x) < 10) ? (vel.x) * 0.95 : 10 * vel.x / Math.abs(vel.x) * 0.98;
-        vel.x = (Math.abs(vel.x) > 0.3) ? vel.x: 0;
-        vel.y -= (vel.y > 3) ? 3 - jumpToken * jumpSpeed : accY - jumpToken * jumpSpeed;
+        vel.x = (Math.abs(vel.getX()) < 10) ? (vel.getX()) * 0.95 : 10 * vel.getX() / Math.abs(vel.getX()) * 0.98;
+        vel.x = (Math.abs(vel.getX()) > 0.3) ? vel.getX(): 0;
+        vel.y -= (vel.getY() > 3) ? 3 - jumpToken * jumpSpeed : accY - jumpToken * jumpSpeed;
 
-        pos.x += vel.x;
-        pos.y += vel.y;
+        pos.x += vel.getX();
+        pos.y += vel.getY();
         jumpToken = (jumpToken != 0) ? ((jumpToken > 0) ? jumpToken - 1 : jumpToken + 1) : 0;
-        collisionBox = new Rectangle2D.Double(pos.x - (double) size / 2, pos.y - (double) size / 2, size, size);
+        collisionBox = new Rectangle2D.Double(pos.getX() - (double) size / 2, pos.getY() - (double) size / 2, size, size);
 
         accY = touchingFloor? 0: 0.3;
 

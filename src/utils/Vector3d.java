@@ -35,6 +35,18 @@ public class Vector3d {
         return z;
     }
 
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
     public double distance(Vector3d vector3d) {
         return Math.sqrt(Math.pow((x + vector3d.x), 2) + Math.pow((y + vector3d.y), 2) + Math.pow((z + vector3d.z), 2));
     }

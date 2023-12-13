@@ -6,14 +6,15 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class GameObject {
+public class GameObject implements Serializable {
 
     protected Vector3d pos, vel;
     protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
-    public Image image;
+    public BufferedImage image;
 
     public GameObject(Vector3d pos, int size) {
         this.pos = pos;
@@ -88,11 +89,11 @@ public class GameObject {
     }
 
     public void setX(double newPos) {
-        pos.x = newPos;
+        pos.setX(newPos);
     }
 
     public void setY(double newPos) {
-        pos.y = newPos;
+        pos.setY(newPos);
     }
 
     public void setPos(Vector3d pos) {
@@ -100,11 +101,11 @@ public class GameObject {
     }
 
     public void setVelX(double newVel) {
-        vel.x = newVel;
+        vel.setX(newVel);
     }
 
     public void setVelY(double newVel) {
-        vel.y = newVel;
+        vel.setY(newVel);
     }
 
     public void setSize(int size) {
@@ -119,7 +120,7 @@ public class GameObject {
 
     }
 
-    public Image getImage() {
+    public BufferedImage imageToBuffered(Image imageToTransform) {
         AffineTransform transform = new AffineTransform();
         transform.translate(0, size);
         transform.scale(1, -1);
@@ -127,10 +128,14 @@ public class GameObject {
         BufferedImage bimage = new BufferedImage(size, 2 * size, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(image, transform, null);
+        bGr.drawImage(imageToTransform, transform, null);
         bGr.dispose();
 
         return bimage;
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public void animate() {

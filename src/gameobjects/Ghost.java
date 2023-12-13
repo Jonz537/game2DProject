@@ -18,8 +18,8 @@ public class Ghost extends GameObject{
 
         try {
             // TODO find image
-            image = ImageIO.read(new File("./assets/ghost.png"))
-                    .getScaledInstance((size), size, Image.SCALE_SMOOTH);
+            image = imageToBuffered(ImageIO.read(new File("./assets/ghost.png"))
+                    .getScaledInstance((size), size, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

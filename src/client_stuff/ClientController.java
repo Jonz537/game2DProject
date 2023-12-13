@@ -2,12 +2,10 @@ package client_stuff;
 
 import utils.Game;
 import utils.GameController;
+import utils.GameParser;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientController extends GameController {
@@ -24,21 +22,24 @@ public class ClientController extends GameController {
         try {
             socket = new Socket("localhost", 1234);
             inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             outStream = new PrintWriter(socket.getOutputStream(), true);
 
-            Timer entitiesTimer = new Timer(2, e -> {
-                // TODO receive stuff
+            try {
+                GameParser gameData = (GameParser) objectInputStream.readObject();
+                System.out.println(gameData);
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+//                    System.out.println("Error receiving the file");
+            }
+
+            Timer entitiesTimer = new Timer(1000, e -> {
+
             });
+            entitiesTimer.start();
 
         } catch (IOException e) {
-            // TODO handle exceptions
             throw new RuntimeException(e);
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 

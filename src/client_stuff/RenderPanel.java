@@ -52,21 +52,21 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        //TODO connection
         Timer physicTimer = new Timer(2, e -> {
             gameController.update();
             gameController.checkCollision();
         });
+        physicTimer.start();
+        Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
+        animationTimer.start();
 
-        // start update timer
-        Timer gameTimer = new Timer(16, (e) -> {
+//         start update timer
+        Timer renderTimer = new Timer(16, (e) -> {
             repaint();
         });
-        Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
+        renderTimer.start();
 
-        physicTimer.start();
-        gameTimer.start();
-        animationTimer.start();
     }
 
     @Override
@@ -215,6 +215,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 //            case KeyEvent.VK_A -> gameController.sendCommand("sx");
 //            case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
 //            case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
+            //TODO connection
             case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
             case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
             case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();

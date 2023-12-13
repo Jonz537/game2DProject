@@ -18,7 +18,8 @@ public class MainGui extends JDialog {
 
         model = new Game();
         controller = new ClientController(model);
-        controller.connect();
+        //TODO connection
+//        controller.connect();
 
         RenderPanel renderPanel = new RenderPanel(controller);
         contentPane.add(renderPanel);

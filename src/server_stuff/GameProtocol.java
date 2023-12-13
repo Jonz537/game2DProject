@@ -2,12 +2,10 @@ package server_stuff;
 
 import gameobjects.Bullet;
 import utils.GameController;
+import utils.GameParser;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 
@@ -37,17 +35,27 @@ public class GameProtocol implements Runnable {
         try {
             System.out.println("New gamer");
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             outStream = new PrintWriter(client.getOutputStream(), true);
 
-            Timer entitiesTimer = new Timer(2, e -> {
-                // TODO send stuff
-                controller.getPlayer();
-                controller.getEntities();
+            GameParser gameParser = new GameParser(controller.getPlayer(), controller.getEntities());
+
+            try {
+                objectOutputStream.writeObject(gameParser);
+                objectOutputStream.flush();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+//                    System.out.println("Couldn't contact the client");
+            }
+            Timer entitiesTimer = new Timer(1000, e -> {
+
+
             });
+            entitiesTimer.start();
 
             String request;
             while((request = inStream.readLine()) != null) {
-                // TODO receive stuff
+                // TODO command to hashmap
                 System.out.println(request);
             }
 

@@ -3,6 +3,7 @@ package server_stuff;
 import utils.Game;
 import utils.GameController;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,15 @@ public class MainServer {
     public static void main(String[] args) {
         model = new Game();
         controller = new GameController(model);
+
+        Timer physicTimer = new Timer(2, e -> {
+            controller.update();
+            controller.checkCollision();
+        });
+        physicTimer.start();
+
+        Timer animationTimer = new Timer(100, (e -> controller.updateImages()));
+        animationTimer.start();
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
