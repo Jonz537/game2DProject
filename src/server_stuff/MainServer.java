@@ -34,7 +34,6 @@ public class MainServer {
             while (true) {
                 executor.submit(new GameProtocol(server.accept(), controller));
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

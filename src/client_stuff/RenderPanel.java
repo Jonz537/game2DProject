@@ -23,10 +23,10 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     protected ClientController gameController;
     protected Image sceneBackground;
 
-    //TODO debug mode
     int lightLevel = 25, darkLevel = 255;
     public final static double worldSize = 1000.;
     protected double scaler, maxScaler;
+
     double torchRadius = worldSize / 3.5;
     protected Point2D mousePos = new Point(0, 0);
 
@@ -53,13 +53,13 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             throw new RuntimeException(e);
         }
         //TODO connection
-        Timer physicTimer = new Timer(2, e -> {
-            gameController.update();
-            gameController.checkCollision();
-        });
-        physicTimer.start();
-        Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
-        animationTimer.start();
+//        Timer physicTimer = new Timer(2, e -> {
+//            gameController.update();
+//            gameController.checkCollision();
+//        });
+//        physicTimer.start();
+//        Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
+//        animationTimer.start();
 
 //         start update timer
         Timer renderTimer = new Timer(16, (e) -> {

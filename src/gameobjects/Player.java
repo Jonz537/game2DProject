@@ -29,6 +29,7 @@ public class Player extends GameObject {
             // TODO find images
             image = imageToBuffered(ImageIO.read(new File("./assets/player.png"))
                     .getScaledInstance((size), size, Image.SCALE_SMOOTH));
+            image = null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

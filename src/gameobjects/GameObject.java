@@ -2,11 +2,12 @@ package gameobjects;
 
 import utils.Vector3d;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
+import java.io.*;
 
 public class GameObject implements Serializable {
 
@@ -14,7 +15,7 @@ public class GameObject implements Serializable {
     protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
-    public BufferedImage image;
+    public transient BufferedImage image;
 
     public GameObject(Vector3d pos, int size) {
         this.pos = pos;
@@ -120,6 +121,36 @@ public class GameObject implements Serializable {
 
     }
 
+    public void animate() {
+
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream out) {
+        // Write the image as bytes
+        if (image != null) {
+            try {
+                out.defaultWriteObject();
+                ImageIO.write(image, "png", out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) {
+        // Read the image bytes and reconstruct the BufferedImage
+        try {
+            in.defaultReadObject();
+            image = ImageIO.read(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public BufferedImage imageToBuffered(Image imageToTransform) {
         AffineTransform transform = new AffineTransform();
         transform.translate(0, size);
@@ -138,7 +169,6 @@ public class GameObject implements Serializable {
         return image;
     }
 
-    public void animate() {
 
-    }
+
 }

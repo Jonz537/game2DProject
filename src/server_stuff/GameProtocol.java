@@ -38,10 +38,11 @@ public class GameProtocol implements Runnable {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             outStream = new PrintWriter(client.getOutputStream(), true);
 
-            GameParser gameParser = new GameParser(controller.getPlayer(), controller.getEntities());
+            GameParser gameParser = new GameParser(null, null);
 
             try {
                 objectOutputStream.writeObject(gameParser);
+                System.out.println("Sent");
                 objectOutputStream.flush();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

@@ -1,6 +1,8 @@
 package utils;
 
-public class Vector3d {
+import java.io.Serializable;
+
+public class Vector3d implements Serializable {
 
     // TODO fix this public mess
     public double x;

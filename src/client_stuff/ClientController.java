@@ -27,6 +27,7 @@ public class ClientController extends GameController {
 
             try {
                 GameParser gameData = (GameParser) objectInputStream.readObject();
+                System.out.println("received");
                 System.out.println(gameData);
             } catch (IOException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
