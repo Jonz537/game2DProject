@@ -1,4 +1,4 @@
-package renderer;
+package client_stuff;
 
 import gameobjects.*;
 import utils.GameController;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class RenderPanel extends JPanel implements KeyListener, MouseMotionListener {
 
-    protected GameController gameController;
+    protected ClientController gameController;
     protected Image sceneBackground;
 
     //TODO debug mode
@@ -30,7 +30,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     double torchRadius = worldSize / 3.5;
     protected Point2D mousePos = new Point(0, 0);
 
-    public RenderPanel(GameController controller) {
+    public RenderPanel(ClientController controller) {
         gameController = controller;
         setFocusable(true);
         addKeyListener(this);
@@ -53,14 +53,18 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             throw new RuntimeException(e);
         }
 
-        // start update timer
-        Timer gameTimer = new Timer(16, (e) -> {
+        Timer physicTimer = new Timer(2, e -> {
             gameController.update();
             gameController.checkCollision();
+        });
+
+        // start update timer
+        Timer gameTimer = new Timer(16, (e) -> {
             repaint();
         });
         Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
 
+        physicTimer.start();
         gameTimer.start();
         animationTimer.start();
     }
@@ -207,16 +211,19 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     public void keyPressed(KeyEvent e) {
         // TODO make all the inputs + parallel inputs
         switch (e.getKeyCode()) {
+//            case KeyEvent.VK_D -> gameController.sendCommand("rx");
+//            case KeyEvent.VK_A -> gameController.sendCommand("sx");
+//            case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
+//            case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
             case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
             case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
             case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
             case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
-            case KeyEvent.VK_Q -> printDebugInfo();
         }
     }
 
     private void printDebugInfo() {
-        System.out.println(gameController.getSpawnPoint());
+
     }
 
     @Override

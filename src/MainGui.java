@@ -1,4 +1,5 @@
-import renderer.RenderPanel;
+import client_stuff.ClientController;
+import client_stuff.RenderPanel;
 import utils.Game;
 import utils.GameController;
 
@@ -9,14 +10,15 @@ public class MainGui extends JDialog {
     private JPanel contentPane;
 
     Game model;
-    GameController controller;
+    ClientController controller;
 
     public MainGui() {
         setContentPane(contentPane);
         setModal(true);
 
         model = new Game();
-        controller = new GameController(model);
+        controller = new ClientController(model);
+        controller.connect();
 
         RenderPanel renderPanel = new RenderPanel(controller);
         contentPane.add(renderPanel);

@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class Player extends GameObject {
 
+    private boolean touchingFloor = true;
     public int jumpToken = 0;
     public final double jumpSpeed = 35;
 
@@ -45,6 +46,17 @@ public class Player extends GameObject {
         pos.y += vel.y;
         jumpToken = (jumpToken != 0) ? ((jumpToken > 0) ? jumpToken - 1 : jumpToken + 1) : 0;
         collisionBox = new Rectangle2D.Double(pos.x - (double) size / 2, pos.y - (double) size / 2, size, size);
+
+        accY = touchingFloor? 0: 0.3;
+
+    }
+
+    public boolean isTouchingFloor() {
+        return touchingFloor;
+    }
+
+    public void setTouchingFloor(boolean touchingFloor) {
+        this.touchingFloor = touchingFloor;
     }
 
 
@@ -58,7 +70,9 @@ public class Player extends GameObject {
 
     public void jump() {
         // TODO fix jump for better movement
-        jumpToken++;
+        if (touchingFloor) {
+            jumpToken++;
+        }
     }
 
     public void die(Vector3d spawnpoint) {

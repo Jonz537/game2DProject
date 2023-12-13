@@ -1,6 +1,5 @@
 package gameobjects;
 
-import renderer.RenderPanel;
 import utils.Vector3d;
 
 import java.awt.*;
@@ -13,9 +12,8 @@ public class GameObject {
     protected Vector3d pos, vel;
     protected Rectangle2D.Double collisionBox;
     protected int size;
-    public double accX = 0., accY = 0.2;
+    public double accX = 0., accY = 0.3;
     public Image image;
-
 
     public GameObject(Vector3d pos, int size) {
         this.pos = pos;
@@ -27,6 +25,12 @@ public class GameObject {
         this.size = size;
         this.accX = accX;
         this.accY = accY;
+    }
+
+    public GameObject(Vector3d pos, Vector3d vel, int size) {
+        this.pos = pos;
+        this.vel = vel;
+        this.size = size;
     }
 
     public GameObject(Vector3d pos, Rectangle2D.Double collisionBox, int size) {

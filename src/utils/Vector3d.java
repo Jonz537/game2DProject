@@ -39,6 +39,10 @@ public class Vector3d {
         return Math.sqrt(Math.pow((x + vector3d.x), 2) + Math.pow((y + vector3d.y), 2) + Math.pow((z + vector3d.z), 2));
     }
 
+    public double getNorma() {
+        return Math.sqrt((x * x) + (y * y) + (z * z));
+    }
+
     @Override
     public String toString() {
         return "Vector3d{" +

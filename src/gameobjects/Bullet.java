@@ -15,7 +15,7 @@ public class Bullet extends GameObject {
     public Bullet(Vector3d pos, int size, double vecX, double vecY, double accY) {
         super(new Vector3d(pos), size, 0, accY);
         vel = new Vector3d(vecX, vecY, 0);
-        collisionBox = new Rectangle2D.Double(pos.x - (double) size / 2, pos.y - (double) size / 2, size, size);
+        collisionBox = new Rectangle2D.Double(pos.x, pos.y, size, size);
 
         try {
             image = ImageIO.read(new File("./assets/test.jpg"))
@@ -29,7 +29,7 @@ public class Bullet extends GameObject {
         vel.y -= (vel.y > 3) ? 3 : accY;
         pos.x += vel.x;
         pos.y += vel.y;
-        collisionBox = new Rectangle2D.Double(pos.x - (double) size / 2, pos.y - (double) size / 2, size, size);
+        collisionBox = new Rectangle2D.Double(pos.x, pos.y, size, size);
         ttl--;
     }
 
