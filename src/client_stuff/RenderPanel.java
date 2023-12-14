@@ -58,15 +58,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             throw new RuntimeException(e);
         }
         //TODO connection
-//        Timer physicTimer = new Timer(2, e -> {
-//            gameController.update();
-//            gameController.checkCollision();
-//        });
-//        physicTimer.start();
-//        Timer animationTimer = new Timer(100, (e -> gameController.updateImages()));
-//        animationTimer.start();
 
-//         start update timer
         Timer renderTimer = new Timer(16, (e) -> {
             repaint();
             applyControls();
@@ -79,6 +71,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        //TODO entities
+//        System.out.println(gameController.getEntities());
         // antialiasing
         Graphics2D graphics = (Graphics2D) g;
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -111,6 +105,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         if (imageData.getOrDefault(go.getImageRef(), null) == null) {
             imageData.put(go.getImageRef(), go.getImage());
         }
+
         if (go instanceof Player) {
             graphics.drawImage(go.imageToBuffered(imageData.get(go.getImageRef())), (int) go.getX() - go.getSize() / 2, (int) go.getY() - go.getSize() / 2, this);
         } else if (go instanceof Platform) {

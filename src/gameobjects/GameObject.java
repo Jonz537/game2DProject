@@ -1,6 +1,6 @@
 package gameobjects;
 
-import utils.Vector3d;
+import utils.Vector;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.io.*;
 
 public class GameObject implements Serializable {
 
-    protected Vector3d pos, vel;
+    protected Vector pos, vel;
     protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
@@ -19,38 +19,59 @@ public class GameObject implements Serializable {
     protected String imageRef;
 //    public transient BufferedImage image;
 
-    public GameObject(Vector3d pos, int size) {
+    public GameObject(Player player) {
+        pos = new Vector(player.getPos());
+        vel = new Vector(player.getVel());
+        collisionBox = new Rectangle2D.Double(player.getCollisionBox().getX(), player.getCollisionBox().getY(),
+                player.getCollisionBox().width, player.getCollisionBox().height);
+        size = player.getSize();
+        accX = player.accX;
+        accY = player.accY;
+    }
+
+    public GameObject(Ghost player) {
+        pos = new Vector(player.getPos());
+        vel = new Vector(player.getVel());
+        collisionBox = new Rectangle2D.Double(player.getCollisionBox().getX(), player.getCollisionBox().getY(),
+                player.getCollisionBox().width, player.getCollisionBox().height);
+        size = player.getSize();
+        accX = player.accX;
+        accY = player.accY;
+    }
+
+
+    public GameObject(Vector pos, int size) {
         this.pos = pos;
         this.size = size;
     }
 
-    public GameObject(Vector3d pos, int size, double accX, double accY) {
+    public GameObject(Vector pos, int size, double accX, double accY) {
         this.pos = pos;
         this.size = size;
         this.accX = accX;
         this.accY = accY;
     }
 
-    public GameObject(Vector3d pos, Vector3d vel, int size) {
+    public GameObject(Vector pos, Vector vel, int size) {
         this.pos = pos;
         this.vel = vel;
         this.size = size;
     }
 
-    public GameObject(Vector3d pos, Rectangle2D.Double collisionBox, int size) {
+    public GameObject(Vector pos, Rectangle2D.Double collisionBox, int size) {
         this.pos = pos;
         this.collisionBox = collisionBox;
         this.size = size;
     }
 
-    public GameObject(Vector3d pos, Vector3d vel, Rectangle2D.Double collisionBox, int size) {
+    public GameObject(Vector pos, Vector vel, Rectangle2D.Double collisionBox, int size) {
         this.pos = pos;
         this.vel = vel;
         this.collisionBox = collisionBox;
         this.size = size;
     }
 
-    public GameObject(Vector3d pos, Rectangle2D.Double collisionBox, int size, double accX, double accY) {
+    public GameObject(Vector pos, Rectangle2D.Double collisionBox, int size, double accX, double accY) {
         this.pos = pos;
         this.collisionBox = collisionBox;
         this.size = size;
@@ -58,7 +79,7 @@ public class GameObject implements Serializable {
         this.accY = accY;
     }
 
-    public GameObject(Vector3d pos, Vector3d vel, Rectangle2D.Double collisionBox, int size, double accX, double accY) {
+    public GameObject(Vector pos, Vector vel, Rectangle2D.Double collisionBox, int size, double accX, double accY) {
         this.pos = pos;
         this.vel = vel;
         this.collisionBox = collisionBox;
@@ -67,8 +88,12 @@ public class GameObject implements Serializable {
         this.accY = accY;
     }
 
-    public Vector3d getPos() {
+    public Vector getPos() {
         return pos;
+    }
+
+    public Vector getVel() {
+        return vel;
     }
 
     public double getX() {
@@ -99,8 +124,8 @@ public class GameObject implements Serializable {
         pos.setY(newPos);
     }
 
-    public void setPos(Vector3d pos) {
-        this.pos = new Vector3d(pos);
+    public void setPos(Vector pos) {
+        this.pos = new Vector(pos);
     }
 
     public void setVelX(double newVel) {

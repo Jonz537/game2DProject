@@ -1,14 +1,18 @@
 package server_stuff;
 
 import gameobjects.Bullet;
+import gameobjects.GameObject;
+import gameobjects.Player;
 import utils.GameController;
 import utils.GameParser;
+import utils.Vector;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,35 +51,25 @@ public class GameProtocol implements Runnable {
             controller.addPlayer(client);
 
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            int banana = 0;
 
             Timer timer = new Timer();
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     try {
-//                        GameParser gameParser = new GameParser(controller.getPlayer(client), controller.getEntities());
-//                        objectOutputStream.writeObject(gameParser);
-
-                        // il client riesce ricevere perfettamente dati primitivi (tipo player.getY());
-//                        objectOutputStream.writeObject(controller.getPlayer(client).getY());
-//                        System.out.println(controller.getPlayer(client).getY());
-
-                        // modifica i valori dei Vector3d (sembra mantenere il segno), quando il valore
-                        // è 0 i valori vengono consegnati correttamente
-//                        objectOutputStream.writeObject(controller.getPlayer(client).getPos());
-//                        System.out.println(controller.getPlayer(client).getPos());
-
-                        // Rectangle2D.Double funziona correttamente
-//                        objectOutputStream.writeObject(controller.getPlayer(client).getCollisionBox());
-//                        System.out.println(controller.getPlayer(client).getCollisionBox());
-
-                        // sembra che l'unico problema risieda nell'invio di Vector3d (classe creata da me)
-                        // non ho la minima idea del perché (suppongo c'entri Serializable)
+                        GameParser gameParser = new GameParser(new Player(controller.getPlayer(client)),
+                                new ArrayList<>(controller.getEntities()));
+                        objectOutputStream.writeObject(gameParser);
                         objectOutputStream.flush();
 
                     } catch (IOException e) {
                         System.out.println("Client disconnected abruptly");
+                        this.cancel();
+                        try {
+                            client.close();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
             };

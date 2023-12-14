@@ -1,6 +1,6 @@
 package gameobjects;
 
-import utils.Vector3d;
+import utils.Vector;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class Tent extends GameObject implements Serializable {
 
-    public Tent(Vector3d pos, int height) {
+    public Tent(Vector pos, int height) {
         super(pos, height);
 
         collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), 2 * size, size);

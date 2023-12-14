@@ -1,27 +1,27 @@
 package utils;
 
+import java.io.Serial;
 import java.io.Serializable;
 
-public class Vector3d implements Serializable {
+public class Vector implements Serializable {
 
-    public double x;
-    public double y;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private double x;
+    private double y;
     private double z;
 
-    public Vector3d(Vector3d pos) {
-        this.x = pos.x;
-        this.y = pos.y;
-        this.z = pos.z;
-    }
-
-    public Vector3d(double x, double y, double z) {
+    public Vector(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Vector3d add(Vector3d addend) {
-        return new Vector3d(x + addend.x, y + addend.y, z + addend.z);
+    public Vector(Vector pos) {
+        this.x = pos.x;
+        this.y = pos.y;
+        this.z = pos.z;
     }
 
     public double getX() {
@@ -32,6 +32,7 @@ public class Vector3d implements Serializable {
         return y;
     }
 
+
     public double getZ() {
         return z;
     }
@@ -40,8 +41,16 @@ public class Vector3d implements Serializable {
         this.x = x;
     }
 
+    public void addX(double value) {
+        this.x += value;
+    }
+
     public void setY(double y) {
         this.y = y;
+    }
+
+    public void addY(double value) {
+        this.y += value;
     }
 
     public void setZ(double z) {

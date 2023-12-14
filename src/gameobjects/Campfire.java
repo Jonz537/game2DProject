@@ -1,11 +1,10 @@
 package gameobjects;
 
-import utils.Vector3d;
+import utils.Vector;
 
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -14,7 +13,7 @@ public class Campfire extends GameObject implements Serializable {
     private final double lightRadius;
     private int currentFrame;
 
-    public Campfire(Vector3d pos, double lightRadius) {
+    public Campfire(Vector pos, double lightRadius) {
         super(pos, 50);
         this.lightRadius = lightRadius;
         this.collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), 50, 50);

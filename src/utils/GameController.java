@@ -26,6 +26,14 @@ public class GameController {
         model.setEntities(entities);
     }
 
+    public ArrayList<GameObject> createEntitiesCopy(ArrayList<GameObject> entities) {
+//        ArrayList<GameObject> copy = new ArrayList<>();
+//        for (GameObject go: entities) {
+//            copy.add(new GameObject(go));
+//        }
+//        return copy;
+    }
+
     public void update() {
         model.update();
     }
@@ -42,7 +50,7 @@ public class GameController {
         model.updateImages();
     }
 
-    public Vector3d getSpawnPoint() {
+    public Vector getSpawnPoint() {
         return model.getSpawnPoint();
     }
 

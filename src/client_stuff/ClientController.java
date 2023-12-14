@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,16 +36,14 @@ public class ClientController extends GameController {
             objectInputStream = new ObjectInputStream(socket.getInputStream());
             outStream = new PrintWriter(socket.getOutputStream());
 
-
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     try {
-//                        GameParser gameParser = (GameParser) objectInputStream.readObject();
-//                        System.out.println(gameParser.getPlayer());
-//                        setPlayer(gameParser.getPlayer());
-//                        setEntities(gameParser.getEntities());
-                        System.out.println(objectInputStream.readObject());
+                        GameParser gameParser = new GameParser((GameParser) objectInputStream.readObject());
+                        System.out.println(gameParser.getEntities());
+                        setPlayer(new Player(gameParser.getPlayer()));
+                        setEntities(new ArrayList<>(gameParser.getEntities()));
                     } catch (IOException | ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }

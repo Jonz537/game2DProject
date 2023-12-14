@@ -13,24 +13,24 @@ public class Game {
     protected Player player;
     protected HashMap<Socket, Player> players = new HashMap<>();
     protected ArrayList<GameObject> entities = new ArrayList<>();
-    protected Vector3d spawnPoint = new Vector3d(0,0,0);
+    protected Vector spawnPoint = new Vector(0,0,0);
 
     public Game() {
-        player = new Player(new Vector3d(0,0,0), 0);
+        player = new Player(new Vector(0,0,0), 0);
     }
 
     public void init() {
 
-        entities.add(new Campfire(new Vector3d(0, -130, 0), 150));
-        entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 3, -30, 0), 350));
-        entities.add(new Tent(new Vector3d(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
-        entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
+        entities.add(new Campfire(new Vector(0, -130, 0), 150));
+        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 3, -30, 0), 350));
+        entities.add(new Tent(new Vector(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
+        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
-        entities.add(new Ghost(new Vector3d(100, 100, 0), 1, 50));
+        entities.add(new Ghost(new Vector(100, 100, 0), 1, 50));
 
-        entities.add(new Platform(new Vector3d(0, -200, 0), Platform.IMG_LENGTH * 2));
-        entities.add(new Platform(new Vector3d(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
-        entities.add(new Platform(new Vector3d(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 7));
+        entities.add(new Platform(new Vector(0, -200, 0), Platform.IMG_LENGTH * 2));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 7));
 
     }
 
@@ -47,7 +47,7 @@ public class Game {
     }
 
     public void addPlayer(Socket client) {
-        Player play = new Player(new Vector3d(0,0,0), 50);
+        Player play = new Player(new Vector(0,0,0), 50);
         entities.add(play);
         players.put(client, play);
     }
@@ -134,11 +134,11 @@ public class Game {
         entities.forEach(GameObject::animate);
     }
 
-    public Vector3d getSpawnPoint() {
+    public Vector getSpawnPoint() {
         return spawnPoint;
     }
 
-    public void setSpawnPoint(Vector3d spawnPoint) {
-        this.spawnPoint = new Vector3d(spawnPoint.getX(), spawnPoint.getY() + 50, 0);
+    public void setSpawnPoint(Vector spawnPoint) {
+        this.spawnPoint = new Vector(spawnPoint.getX(), spawnPoint.getY() + 50, 0);
     }
 }
