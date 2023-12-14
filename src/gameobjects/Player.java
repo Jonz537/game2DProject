@@ -3,8 +3,9 @@ package gameobjects;
 import utils.Vector3d;
 
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Serializable {
 
     private boolean touchingFloor = true;
     public int jumpToken = 0;

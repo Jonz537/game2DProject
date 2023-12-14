@@ -2,6 +2,7 @@ package utils;
 
 import gameobjects.*;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,22 +11,21 @@ import java.util.Set;
 public class Game {
 
     protected Player player;
-    protected HashMap<String, Player> players = new HashMap<>();
+    protected HashMap<Socket, Player> players = new HashMap<>();
     protected ArrayList<GameObject> entities = new ArrayList<>();
     protected Vector3d spawnPoint = new Vector3d(0,0,0);
 
     public Game() {
-
+        player = new Player(new Vector3d(0,0,0), 0);
     }
 
     public void init() {
-        player = new Player(spawnPoint, 50);
+
         entities.add(new Campfire(new Vector3d(0, -130, 0), 150));
         entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 3, -30, 0), 350));
         entities.add(new Tent(new Vector3d(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
         entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
-        entities.add(player);
         entities.add(new Ghost(new Vector3d(100, 100, 0), 1, 50));
 
         entities.add(new Platform(new Vector3d(0, -200, 0), Platform.IMG_LENGTH * 2));
@@ -34,8 +34,22 @@ public class Game {
 
     }
 
+    public Player getPlayer() {
+        return players.getOrDefault(null, player);
+    }
+
+    public Player getPlayer(Socket client) {
+        return players.get(client);
+    }
+
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void addPlayer(Socket client) {
+        Player play = new Player(new Vector3d(0,0,0), 50);
+        entities.add(play);
+        players.put(client, play);
     }
 
     public ArrayList<GameObject> getEntities() {
@@ -51,6 +65,7 @@ public class Game {
     }
 
     public void update() {
+//        entities.sort();
         entities.forEach(gameObject -> {
             if (gameObject instanceof Ghost) {
                 ((Ghost) gameObject).followPlayer(getPlayer());
@@ -117,10 +132,6 @@ public class Game {
 
     public void updateImages() {
         entities.forEach(GameObject::animate);
-    }
-
-    public Player getPlayer() {
-        return players.getOrDefault(null, player);
     }
 
     public Vector3d getSpawnPoint() {

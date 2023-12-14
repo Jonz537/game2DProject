@@ -6,8 +6,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Tent extends GameObject{
+public class Tent extends GameObject implements Serializable {
 
     public Tent(Vector3d pos, int height) {
         super(pos, height);

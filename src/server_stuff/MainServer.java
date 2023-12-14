@@ -2,10 +2,12 @@ package server_stuff;
 
 import utils.Game;
 import utils.GameController;
+import utils.GameParser;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,14 +21,25 @@ public class MainServer {
         model.init();
         controller = new GameController(model);
 
-        Timer physicTimer = new Timer(2, e -> {
-            controller.update();
-            controller.checkCollision();
-        });
-        physicTimer.start();
+        java.util.Timer physics = new java.util.Timer();
+        TimerTask updateTask = new TimerTask() {
+            @Override
+            public void run() {
+                controller.update();
+                controller.checkCollision();
+            }
+        };
+        physics.scheduleAtFixedRate(updateTask, 0, 2);
 
-        Timer animationTimer = new Timer(100, (e -> controller.updateImages()));
-        animationTimer.start();
+        java.util.Timer animations = new java.util.Timer();
+        TimerTask animationTask = new TimerTask() {
+            @Override
+            public void run() {
+                controller.updateImages();
+            }
+        };
+        animations.scheduleAtFixedRate(animationTask, 0, 100);
+
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -40,8 +53,4 @@ public class MainServer {
         }
 
     }
-
-
-
-
 }

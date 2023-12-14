@@ -16,7 +16,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RenderPanel extends JPanel implements KeyListener, MouseMotionListener {
 
@@ -64,7 +67,10 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 //        animationTimer.start();
 
 //         start update timer
-        Timer renderTimer = new Timer(16, (e) -> repaint());
+        Timer renderTimer = new Timer(16, (e) -> {
+            repaint();
+            applyControls();
+        });
         renderTimer.start();
 
     }
@@ -114,11 +120,11 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         }
 
         // TODO debug mode
-//        Area a = new Area(go.getCollisionBox());
-//        graphics.setColor(new Color(255,0,0,128));
-//        graphics.fill(a);
-//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
-//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
+        Area a = new Area(go.getCollisionBox());
+        graphics.setColor(new Color(255,0,0,128));
+        graphics.fill(a);
+        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
+        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
     }
 
     private void lightRender(Graphics2D graphics) {
@@ -197,26 +203,37 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
     }
 
+    Set<Integer> currentActiveControls = new HashSet<>();
+
     // player movement
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO make all the inputs + parallel inputs
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_D -> gameController.sendCommand("rx");
-            case KeyEvent.VK_A -> gameController.sendCommand("sx");
-            case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
-            case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
-            //TODO connection
-//            case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
-//            case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
-//            case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
-//            case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
-        }
+        currentActiveControls.add(e.getKeyCode());
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
+        currentActiveControls.remove(e.getKeyCode());
+    }
 
+    private void applyControls() {
+        for (Integer i: currentActiveControls) {
+            switch (i) {
+                case KeyEvent.VK_D -> System.out.println("d");
+                case KeyEvent.VK_A -> System.out.println("a");
+                case KeyEvent.VK_SPACE -> System.out.println("w");
+                case KeyEvent.VK_ENTER -> System.out.println("s");
+//                case KeyEvent.VK_D -> gameController.sendCommand("rx");
+//                case KeyEvent.VK_A -> gameController.sendCommand("sx");
+//                case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
+//                case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
+                //TODO connection
+//            case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
+//            case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
+//            case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
+//            case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
+            }
+        }
     }
 
     @Override

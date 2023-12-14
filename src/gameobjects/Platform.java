@@ -6,8 +6,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class Platform extends GameObject {
+public class Platform extends GameObject implements Serializable {
 
     private static final int height = 4 * 20;
     public static final int IMG_LENGTH = 4 * 46;

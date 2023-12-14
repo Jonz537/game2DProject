@@ -3,6 +3,7 @@ package utils;
 import gameobjects.GameObject;
 import gameobjects.Player;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class GameController {
@@ -45,7 +46,15 @@ public class GameController {
         return model.getSpawnPoint();
     }
 
+    public void addPlayer(Socket socket) {
+        model.addPlayer(socket);
+    }
+
     public void setPlayer(Player player) {
         model.setPlayer(player);
+    }
+
+    public Player getPlayer(Socket client) {
+        return model.getPlayer(client);
     }
 }

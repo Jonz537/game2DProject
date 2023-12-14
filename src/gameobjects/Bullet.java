@@ -3,8 +3,9 @@ package gameobjects;
 import utils.Vector3d;
 
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
-public class Bullet extends GameObject {
+public class Bullet extends GameObject implements Serializable {
 
     private int ttl = 120;
 

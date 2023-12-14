@@ -3,8 +3,9 @@ package gameobjects;
 import utils.Vector3d;
 
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
-public class Ghost extends GameObject{
+public class Ghost extends GameObject implements Serializable {
 
     public Ghost(Vector3d pos, double vel, int size) {
         super(pos, new Vector3d(vel, vel,0), size);

@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 public class Vector3d implements Serializable {
 
-    // TODO fix this public mess
     public double x;
     public double y;
-    public double z;
+    private double z;
 
     public Vector3d(Vector3d pos) {
         this.x = pos.x;
@@ -47,10 +46,6 @@ public class Vector3d implements Serializable {
 
     public void setZ(double z) {
         this.z = z;
-    }
-
-    public double distance(Vector3d vector3d) {
-        return Math.sqrt(Math.pow((x + vector3d.x), 2) + Math.pow((y + vector3d.y), 2) + Math.pow((z + vector3d.z), 2));
     }
 
     public double getNorma() {

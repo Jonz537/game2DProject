@@ -5,9 +5,11 @@ import utils.Vector3d;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Campfire extends GameObject {
+public class Campfire extends GameObject implements Serializable {
 
     private final double lightRadius;
     private int currentFrame;
