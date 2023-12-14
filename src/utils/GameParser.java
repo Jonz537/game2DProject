@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class GameParser implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    //TODO fix serializable images
 
     public Player player;
     public ArrayList<GameObject> entities;
@@ -18,6 +17,14 @@ public class GameParser implements Serializable {
     public GameParser(Player player, ArrayList<GameObject> entities) {
         this.player = player;
         this.entities = new ArrayList<>(entities);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public ArrayList<GameObject> getEntities() {
+        return entities;
     }
 
     @Override

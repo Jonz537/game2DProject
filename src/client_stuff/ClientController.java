@@ -4,14 +4,13 @@ import utils.Game;
 import utils.GameController;
 import utils.GameParser;
 
-import javax.swing.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientController extends GameController {
 
-    private Socket socket;
-    private BufferedReader inStream;
     private PrintWriter outStream;
 
     public ClientController(Game model) {
@@ -19,27 +18,16 @@ public class ClientController extends GameController {
     }
 
     public void connect() {
-        try {
-            socket = new Socket("localhost", 1234);
-            inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        try (Socket socket = new Socket("localhost", 1234)) {
+            outStream = new PrintWriter(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            outStream = new PrintWriter(socket.getOutputStream(), true);
 
-            try {
-                GameParser gameData = (GameParser) objectInputStream.readObject();
-                System.out.println("received");
-                System.out.println(gameData);
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-//                    System.out.println("Error receiving the file");
-            }
+            GameParser gameParser = (GameParser) objectInputStream.readObject();
+//            System.out.println(gameParser);
+            setPlayer(gameParser.getPlayer());
+            setEntities(gameParser.getEntities());
 
-            Timer entitiesTimer = new Timer(1000, e -> {
-
-            });
-            entitiesTimer.start();
-
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -48,6 +36,4 @@ public class ClientController extends GameController {
         outStream.print(command);
         System.out.println(command);
     }
-
-
 }

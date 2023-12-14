@@ -4,8 +4,10 @@ import gameobjects.Bullet;
 import utils.GameController;
 import utils.GameParser;
 
-import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 
@@ -13,7 +15,6 @@ public class GameProtocol implements Runnable {
 
     private Socket client;
     private BufferedReader inStream;
-    private PrintWriter outStream;
     private GameController controller;
 
     private static HashMap<String, Runnable> commandMap = new HashMap<>();
@@ -33,32 +34,13 @@ public class GameProtocol implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("New gamer");
+            System.out.println("new gamer");
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(client.getOutputStream());
-            outStream = new PrintWriter(client.getOutputStream(), true);
+            GameParser gameParser = new GameParser(controller.getPlayer(), controller.getEntities());
 
-            GameParser gameParser = new GameParser(null, null);
-
-            try {
-                objectOutputStream.writeObject(gameParser);
-                System.out.println("Sent");
-                objectOutputStream.flush();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-//                    System.out.println("Couldn't contact the client");
-            }
-            Timer entitiesTimer = new Timer(1000, e -> {
-
-
-            });
-            entitiesTimer.start();
-
-            String request;
-            while((request = inStream.readLine()) != null) {
-                // TODO command to hashmap
-                System.out.println(request);
-            }
+            objectOutputStream.writeObject(gameParser);
+            objectOutputStream.flush();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,7 +1,6 @@
 package client_stuff;
 
 import gameobjects.*;
-import utils.GameController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,6 +16,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class RenderPanel extends JPanel implements KeyListener, MouseMotionListener {
 
@@ -25,10 +25,12 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
     int lightLevel = 25, darkLevel = 255;
     public final static double worldSize = 1000.;
-    protected double scaler, maxScaler;
+    protected double converter, maxConverter;
 
     double torchRadius = worldSize / 3.5;
     protected Point2D mousePos = new Point(0, 0);
+
+    HashMap<String, Image> imageData = new HashMap<>();
 
     public RenderPanel(ClientController controller) {
         gameController = controller;
@@ -62,9 +64,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 //        animationTimer.start();
 
 //         start update timer
-        Timer renderTimer = new Timer(16, (e) -> {
-            repaint();
-        });
+        Timer renderTimer = new Timer(16, (e) -> repaint());
         renderTimer.start();
 
     }
@@ -78,12 +78,12 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // world scaling
-        scaler = Math.min(getWidth(), getHeight());
-        maxScaler = Math.max(getWidth(), getHeight());
+        converter = Math.min(getWidth(), getHeight());
+        maxConverter = Math.max(getWidth(), getHeight());
 
-        graphics.translate(getWidth() / 2. - gameController.getPlayer().getX() * scaler / worldSize,
+        graphics.translate(getWidth() / 2. - gameController.getPlayer().getX() * converter / worldSize,
                 getHeight() / 2.);
-        graphics.scale(scaler / worldSize, scaler / worldSize);
+        graphics.scale(converter / worldSize, converter / worldSize);
 
         // draw background stuff
         int chunkXPos = (int) Math.floor((gameController.getPlayer().getX() + (worldSize / 2)) / 4 / worldSize);
@@ -102,12 +102,15 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     }
 
     private void drawGameObject(Graphics2D graphics, GameObject go) {
+        if (imageData.getOrDefault(go.getImageRef(), null) == null) {
+            imageData.put(go.getImageRef(), go.getImage());
+        }
         if (go instanceof Player) {
-            graphics.drawImage(go.getImage(), (int) go.getX() - go.getSize() / 2, (int) go.getY() - go.getSize() / 2, this);
+            graphics.drawImage(go.imageToBuffered(imageData.get(go.getImageRef())), (int) go.getX() - go.getSize() / 2, (int) go.getY() - go.getSize() / 2, this);
         } else if (go instanceof Platform) {
-            graphics.drawImage(go.getImage(), (int) go.getX(), (int) go.getY(), this);
+            graphics.drawImage(go.imageToBuffered(imageData.get(go.getImageRef())), (int) go.getX(), (int) go.getY(), this);
         } else {
-            graphics.drawImage(go.getImage(), (int) go.getX(), (int) go.getY(), this);
+            graphics.drawImage(go.imageToBuffered(imageData.get(go.getImageRef())), (int) go.getX(), (int) go.getY(), this);
         }
 
         // TODO debug mode
@@ -119,8 +122,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     }
 
     private void lightRender(Graphics2D graphics) {
-        Rectangle2D.Double screenDark = new Rectangle2D.Double((-worldSize * maxScaler / 2) + gameController.getPlayer().getX(),
-                (-worldSize * maxScaler / 2), worldSize * maxScaler, worldSize * maxScaler);
+        Rectangle2D.Double screenDark = new Rectangle2D.Double((-worldSize * maxConverter / 2) + gameController.getPlayer().getX(),
+                (-worldSize * maxConverter / 2), worldSize * maxConverter, worldSize * maxConverter);
 
         Point2D mousePosScaled = pixelsToPos(mousePos);
 
@@ -133,26 +136,24 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         boolean drawTorchAlone = true;
         // random test torch
         for (GameObject fire: gameController.getEntities()) {
-            if (!(fire instanceof Fire)) {
+            if (!(fire instanceof Campfire)) {
                 continue;
             }
-            square.subtract(((Fire) fire).getLightArea());
+            square.subtract(((Campfire) fire).getLightArea());
 
             torchCircle = new Area(mouseTorch);
-            torchCircle.intersect(((Fire) fire).getLightArea());
+            torchCircle.intersect(((Campfire) fire).getLightArea());
 
             if (torchCircle.isEmpty()) {
                 Point fireCenter = new Point((int) (fire.getX() + fire.getSize() / 2), (int) (fire.getY() + fire.getSize() / 2));
 
-                graphics.setPaint(createRadialLight(fireCenter, ((Fire) fire).getLightRadius(), new Color(75, 0, 0, darkLevel)));
-                graphics.fill(((Fire) fire).getLightArea());
+                graphics.setPaint(createRadialLight(fireCenter, ((Campfire) fire).getLightRadius(), new Color(75, 0, 0, darkLevel)));
+                graphics.fill(((Campfire) fire).getLightArea());
             } else {
                 drawTorchAlone = false;
-//                Point averageCenter = new Point((int) ((mousePosScaled.getX() + fire.getX() + (fire.getX() + fire.getSize() / 2)) / 2),
-//                        (int) ((mousePosScaled.getY() + fire.getY() + (fire.getY() + fire.getSize() / 2)) / 2));
                 Point averageCenter = new Point((int) ((mousePosScaled.getX() + (fire.getX() + fire.getSize() / 2)) / 2),
                         (int) ((mousePosScaled.getY() + (fire.getY() + fire.getSize() / 2)) / 2));
-                double combinedRadius = (2 * torchRadius) + (((Fire) fire).getLightRadius());
+                double combinedRadius = (2 * torchRadius) + (((Campfire) fire).getLightRadius());
 
                 graphics.setPaint(createRadialLight(averageCenter, combinedRadius, new Color(196, 67, 3, darkLevel)));
                 graphics.fillOval((int) (((averageCenter.getX() - (combinedRadius) + fire.getX()) / 2)),
@@ -168,10 +169,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                     (int) torchRadius, (int) torchRadius);
         }
 
-//        square.subtract(new Area(new Ellipse2D.Double(gameController.getPlayer().getX() - gameController.getPlayer().getSize(),
-//                gameController.getPlayer().getY() - gameController.getPlayer().getSize(),
-//                 2 * gameController.getPlayer().getSize(), 2 * gameController.getPlayer().getSize())));
-
         graphics.setColor(Color.BLACK);
         graphics.fill(square);
     }
@@ -186,17 +183,11 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                         color});
     }
 
-
-    // world coordinate to pixel coordinate
-    public Point2D posToPixels(Point2D point) {
-        return null;
-    }
-
     // pixel coordinate to world coordinate
     public Point2D pixelsToPos(Point2D point2D) {
 
-        int x = (int) ((point2D.getX() - getWidth() / 2 + gameController.getPlayer().getX() * scaler / worldSize) * worldSize / scaler);
-        int y = (int) ((point2D.getY() - getHeight() / 2) * -worldSize / scaler);
+        int x = (int) ((point2D.getX() - getWidth() / 2 + gameController.getPlayer().getX() * converter / worldSize) * worldSize / converter);
+        int y = (int) ((point2D.getY() - getHeight() / 2) * -worldSize / converter);
 
         return new Point(x, y);
     }
@@ -211,20 +202,16 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     public void keyPressed(KeyEvent e) {
         // TODO make all the inputs + parallel inputs
         switch (e.getKeyCode()) {
-//            case KeyEvent.VK_D -> gameController.sendCommand("rx");
-//            case KeyEvent.VK_A -> gameController.sendCommand("sx");
-//            case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
-//            case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
+            case KeyEvent.VK_D -> gameController.sendCommand("rx");
+            case KeyEvent.VK_A -> gameController.sendCommand("sx");
+            case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
+            case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
             //TODO connection
-            case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
-            case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
-            case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
-            case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
+//            case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
+//            case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
+//            case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
+//            case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
         }
-    }
-
-    private void printDebugInfo() {
-
     }
 
     @Override

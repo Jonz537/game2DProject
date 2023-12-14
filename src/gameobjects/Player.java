@@ -2,15 +2,7 @@ package gameobjects;
 
 import utils.Vector3d;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
 
 public class Player extends GameObject {
 
@@ -25,15 +17,7 @@ public class Player extends GameObject {
         this.size = size;
         accX = 0.5;
 
-        try {
-            // TODO find images
-            image = imageToBuffered(ImageIO.read(new File("./assets/player.png"))
-                    .getScaledInstance((size), size, Image.SCALE_SMOOTH));
-            image = null;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        imageRef = "./assets/player.png";
     }
 
     @Override
@@ -50,10 +34,6 @@ public class Player extends GameObject {
 
         accY = touchingFloor? 0: 0.3;
 
-    }
-
-    public boolean isTouchingFloor() {
-        return touchingFloor;
     }
 
     public void setTouchingFloor(boolean touchingFloor) {
@@ -76,8 +56,8 @@ public class Player extends GameObject {
         }
     }
 
-    public void die(Vector3d spawnpoint) {
-        pos = new Vector3d(spawnpoint);
+    public void die(Vector3d spawnPoint) {
+        pos = new Vector3d(spawnPoint);
     }
 
 }

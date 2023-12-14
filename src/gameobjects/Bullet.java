@@ -2,11 +2,7 @@ package gameobjects;
 
 import utils.Vector3d;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.IOException;
 
 public class Bullet extends GameObject {
 
@@ -16,13 +12,6 @@ public class Bullet extends GameObject {
         super(new Vector3d(pos), size, 0, accY);
         vel = new Vector3d(vecX, vecY, 0);
         collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), size, size);
-
-//        try {
-//            image = ImageIO.read(new File("./assets/test.jpg"))
-//                    .getScaledInstance((size), size, Image.SCALE_SMOOTH);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     public void update() {

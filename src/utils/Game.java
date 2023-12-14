@@ -15,20 +15,28 @@ public class Game {
     protected Vector3d spawnPoint = new Vector3d(0,0,0);
 
     public Game() {
+
+    }
+
+    public void init() {
         player = new Player(spawnPoint, 50);
-        entities.add(new Fire(new Vector3d(0, -130, 0), 150));
-        entities.add(new Fire(new Vector3d(100 + Platform.IMG_LENGHT * 3, -30, 0), 350));
-        entities.add(new Tent(new Vector3d(150 + Platform.IMG_LENGHT * 3, -30, 0), 80));
-        entities.add(new Fire(new Vector3d(100 + Platform.IMG_LENGHT * 7, -230, 0), 150));
+        entities.add(new Campfire(new Vector3d(0, -130, 0), 150));
+        entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 3, -30, 0), 350));
+        entities.add(new Tent(new Vector3d(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
+        entities.add(new Campfire(new Vector3d(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
         entities.add(player);
         entities.add(new Ghost(new Vector3d(100, 100, 0), 1, 50));
 
-        entities.add(new Platform(new Vector3d(0, -200, 0), Platform.IMG_LENGHT * 2));
-        entities.add(new Platform(new Vector3d(Platform.IMG_LENGHT * 3, -100, 0), Platform.IMG_LENGHT * 4));
-        entities.add(new Platform(new Vector3d(Platform.IMG_LENGHT * 7, -300, 0), Platform.IMG_LENGHT * 7));
+        entities.add(new Platform(new Vector3d(0, -200, 0), Platform.IMG_LENGTH * 2));
+        entities.add(new Platform(new Vector3d(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
+        entities.add(new Platform(new Vector3d(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 7));
+
     }
 
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
 
     public ArrayList<GameObject> getEntities() {
         return entities;

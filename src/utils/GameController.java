@@ -3,7 +3,6 @@ package utils;
 import gameobjects.GameObject;
 import gameobjects.Player;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class GameController {
@@ -20,6 +19,10 @@ public class GameController {
 
     public ArrayList<GameObject> getEntities() {
         return model.getEntities();
+    }
+
+    public void setEntities(ArrayList<GameObject> entities) {
+        model.setEntities(entities);
     }
 
     public void update() {
@@ -40,5 +43,9 @@ public class GameController {
 
     public Vector3d getSpawnPoint() {
         return model.getSpawnPoint();
+    }
+
+    public void setPlayer(Player player) {
+        model.setPlayer(player);
     }
 }

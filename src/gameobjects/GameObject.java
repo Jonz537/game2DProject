@@ -15,7 +15,9 @@ public class GameObject implements Serializable {
     protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
-    public transient BufferedImage image;
+
+    protected String imageRef;
+//    public transient BufferedImage image;
 
     public GameObject(Vector3d pos, int size) {
         this.pos = pos;
@@ -125,50 +127,46 @@ public class GameObject implements Serializable {
 
     }
 
-    @Serial
-    private void writeObject(ObjectOutputStream out) {
-        // Write the image as bytes
-        if (image != null) {
-            try {
-                out.defaultWriteObject();
-                ImageIO.write(image, "png", out);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @Serial
-    private void readObject(ObjectInputStream in) {
-        // Read the image bytes and reconstruct the BufferedImage
-        try {
-            in.defaultReadObject();
-            image = ImageIO.read(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public BufferedImage imageToBuffered(Image imageToTransform) {
+
+        Image anotherImage = imageToTransform.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+
         AffineTransform transform = new AffineTransform();
         transform.translate(0, size);
         transform.scale(1, -1);
 
-        BufferedImage bimage = new BufferedImage(size, 2 * size, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bImage = new BufferedImage(size, 2 * size, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(imageToTransform, transform, null);
+        Graphics2D bGr = bImage.createGraphics();
+        bGr.drawImage(anotherImage, transform, null);
         bGr.dispose();
 
-        return bimage;
+        return bImage;
+    }
+
+    public String getImageRef() {
+        return imageRef;
     }
 
     public Image getImage() {
-        return image;
+        try {
+            return ImageIO.read(new File(imageRef));
+        } catch (IOException e) {
+            System.out.println(this);
+            throw new RuntimeException(e);
+        }
     }
 
-
-
+    @Override
+    public String toString() {
+        return "GameObject{" +
+                "pos=" + pos +
+                ", vel=" + vel +
+                ", collisionBox=" + collisionBox +
+                ", size=" + size +
+                ", accX=" + accX +
+                ", accY=" + accY +
+                ", imageRef='" + imageRef + '\'' +
+                '}';
+    }
 }

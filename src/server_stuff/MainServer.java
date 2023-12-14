@@ -16,6 +16,7 @@ public class MainServer {
 
     public static void main(String[] args) {
         model = new Game();
+        model.init();
         controller = new GameController(model);
 
         Timer physicTimer = new Timer(2, e -> {
@@ -35,7 +36,7 @@ public class MainServer {
                 executor.submit(new GameProtocol(server.accept(), controller));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Couldn't connect to the client");
         }
 
     }
