@@ -7,19 +7,25 @@ import java.io.Serializable;
 
 public class Ghost extends GameObject implements Serializable {
 
-    public Ghost(Vector pos, double vel, int size) {
+    private Player target;
+
+    public Ghost(Vector pos, double vel, int size, Player target) {
         super(pos, new Vector(vel, vel,0), size);
         collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), size, size);
 
         imageRef = "./assets/ghost.png";
+        this.target = target;
     }
 
     public Ghost(Ghost ghost) {
         super(ghost);
+
+        this.target = ghost.target;
     }
 
-    public void followPlayer(Player player) {
-        Vector playerDirection = new Vector(player.getX() - pos.getX(), player.getY() - pos.getY(), 0);
+    public void followPlayer() {
+
+        Vector playerDirection = new Vector(target.getX() - pos.getX(), target.getY() - pos.getY(), 0);
         playerDirection = new Vector(playerDirection.getX() / playerDirection.getNorma() * getVelX(),
                 playerDirection.getY() / playerDirection.getNorma() * getVelX(), 0);
 

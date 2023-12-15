@@ -16,6 +16,10 @@ public class MainServer {
     private static Game model;
     private static GameController controller;
 
+
+    // Threads: main, update, animation, n * client connected
+
+
     public static void main(String[] args) {
         model = new Game();
         model.init();

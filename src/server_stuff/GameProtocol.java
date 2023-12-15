@@ -22,15 +22,15 @@ public class GameProtocol implements Runnable {
     private Socket client;
     private BufferedReader inStream;
     private GameController controller;
-    ObjectOutputStream objectOutputStream;
+    private ObjectOutputStream objectOutputStream;
 
-    private static HashMap<String, Runnable> commandMap = new HashMap<>();
+    private HashMap<String, Runnable> commandMap = new HashMap<>();
 
     {
         commandMap.put("rx", () -> controller.getPlayer(client).accelerate());
         commandMap.put("sx", () -> controller.getPlayer(client).decelerate());
         commandMap.put("jump", () -> controller.getPlayer(client).jump());
-        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 10, 10, 0.05)));
+        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 0.5, 0, 0)));
     }
 
     public GameProtocol(Socket client, GameController controller) {
@@ -48,7 +48,9 @@ public class GameProtocol implements Runnable {
     public void run() {
         try {
             System.out.println("new gamer:" + client.getInetAddress() + " " + client.getLocalPort());
+            System.out.println(client);
             controller.addPlayer(client);
+            System.out.println(controller.getAllPlayers());
 
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
@@ -67,12 +69,6 @@ public class GameProtocol implements Runnable {
                     } catch (IOException e) {
                         System.out.println("Client disconnected abruptly");
                         this.cancel();
-                        // TODO remove player
-                        try {
-                            client.close();
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
                     }
                 }
             };
@@ -85,6 +81,7 @@ public class GameProtocol implements Runnable {
 
         } catch (IOException e) {
             System.out.println("Client disconnected abruptly");
+            controller.removePlayer(client);
             try {
                 client.close();
             } catch (IOException ex) {

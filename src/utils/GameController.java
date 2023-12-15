@@ -4,6 +4,7 @@ import gameobjects.*;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameController {
 
@@ -25,25 +26,29 @@ public class GameController {
         model.setEntities(entities);
     }
 
+    public HashMap<Socket, Player> getAllPlayers() {
+        return model.players;
+    }
+
     public ArrayList<GameObject> createEntitiesCopy(ArrayList<GameObject> entities) {
-        ArrayList<GameObject> copy = new ArrayList<>();
-        for (GameObject go: entities) {
-            if (go instanceof Bullet) {
-                copy.add(new Bullet((Bullet) go));
-            } else if (go instanceof Campfire) {
-                copy.add(new Campfire((Campfire) go));
-            } else if (go instanceof Ghost) {
-                copy.add(new Ghost((Ghost) go));
-            } else if (go instanceof Platform) {
-                copy.add(new Platform((Platform) go));
-            } else if (go instanceof Player) {
-                copy.add(new Player((Player) go));
-            } else if (go instanceof Tent) {
-                copy.add(new Tent((Tent) go));
-            } else {
-                copy.add(new GameObject(go));
-            }
-        }
+           ArrayList<GameObject> copy = new ArrayList<>();
+           for (GameObject go: entities) {
+               if (go instanceof Bullet) {
+                   copy.add(new Bullet((Bullet) go));
+               } else if (go instanceof Campfire) {
+                   copy.add(new Campfire((Campfire) go));
+               } else if (go instanceof Ghost) {
+                   copy.add(new Ghost((Ghost) go));
+               } else if (go instanceof Platform) {
+                   copy.add(new Platform((Platform) go));
+               } else if (go instanceof Player) {
+                   copy.add(new Player((Player) go));
+               } else if (go instanceof Tent) {
+                   copy.add(new Tent((Tent) go));
+               } else {
+                   copy.add(new GameObject(go));
+               }
+       }
         return copy;
     }
 
@@ -69,6 +74,10 @@ public class GameController {
 
     public void addPlayer(Socket socket) {
         model.addPlayer(socket);
+    }
+
+    public void removePlayer(Socket socket) {
+        model.removePlayer(socket);
     }
 
     public void setPlayer(Player player) {

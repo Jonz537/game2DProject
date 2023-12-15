@@ -26,8 +26,6 @@ public class Game {
         entities.add(new Tent(new Vector(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
         entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
-        entities.add(new Ghost(new Vector(100, 100, 0), 1, 50));
-
         entities.add(new Platform(new Vector(0, -200, 0), Platform.IMG_LENGTH * 2));
         entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
         entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 7));
@@ -37,6 +35,7 @@ public class Game {
     public Player getPlayer() {
         return players.getOrDefault(null, player);
     }
+
 
     public Player getPlayer(Socket client) {
         return players.get(client);
@@ -52,6 +51,10 @@ public class Game {
         players.put(client, play);
     }
 
+    public void removePlayer(Socket socket) {
+        removeEntity(players.remove(socket));
+    }
+
     public ArrayList<GameObject> getEntities() {
         return entities;
     }
@@ -63,18 +66,28 @@ public class Game {
     public void addEntity(GameObject gameObject) {
         entities.add(gameObject);
     }
+    public void removeEntity(GameObject gameObject) {
+        entities.remove(gameObject);
+    }
 
     public void update() {
-//        entities.sort();
+        // TODO entities.sort();
         entities.forEach(gameObject -> {
             if (gameObject instanceof Ghost) {
-                ((Ghost) gameObject).followPlayer(getPlayer());
+                ((Ghost) gameObject).followPlayer();
             }
-            gameObject.update();
+            synchronized (this) {
+                gameObject.update();
+            }
         });
 
+        summonGhost();
         checkPlayerDeath();
         checkToDestroyed();
+    }
+
+    private void summonGhost() {
+
     }
 
     private void checkPlayerDeath() {
