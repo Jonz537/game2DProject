@@ -27,10 +27,10 @@ public class GameProtocol implements Runnable {
     private static HashMap<String, Runnable> commandMap = new HashMap<>();
 
     {
-        commandMap.put("rx", () -> controller.getPlayer().accelerate());
-        commandMap.put("dx", () -> controller.getPlayer().decelerate());
-        commandMap.put("jump", () -> controller.getPlayer().jump());
-        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer().getPos(), 25, 10, 10, 0.05)));
+        commandMap.put("rx", () -> controller.getPlayer(client).accelerate());
+        commandMap.put("dx", () -> controller.getPlayer(client).decelerate());
+        commandMap.put("jump", () -> controller.getPlayer(client).jump());
+        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 10, 10, 0.05)));
     }
 
     public GameProtocol(Socket client, GameController controller) {
@@ -47,7 +47,7 @@ public class GameProtocol implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("new gamer");
+            System.out.println("new gamer:" + client.getInetAddress() + " " + client.getLocalPort());
             controller.addPlayer(client);
 
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -67,6 +67,7 @@ public class GameProtocol implements Runnable {
                     } catch (IOException e) {
                         System.out.println("Client disconnected abruptly");
                         this.cancel();
+                        // TODO remove player
                         try {
                             client.close();
                         } catch (IOException ex) {
@@ -77,8 +78,18 @@ public class GameProtocol implements Runnable {
             };
             timer.scheduleAtFixedRate(timerTask, 0, 5);
 
+            String message;
+            while ((message = inStream.readLine()) != null) {
+                commandMap.get(message).run();
+            }
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Client disconnected abruptly");
+            try {
+                client.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

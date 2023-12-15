@@ -34,14 +34,14 @@ public class ClientController extends GameController {
             Timer timer = new Timer();
 
             objectInputStream = new ObjectInputStream(socket.getInputStream());
-            outStream = new PrintWriter(socket.getOutputStream());
+            outStream = new PrintWriter(socket.getOutputStream(), true);
 
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
                     try {
                         GameParser gameParser = new GameParser((GameParser) objectInputStream.readObject());
-                        System.out.println(gameParser.getEntities());
+//                        System.out.println(gameParser.getEntities());
                         setPlayer(new Player(gameParser.getPlayer()));
                         setEntities(new ArrayList<>(gameParser.getEntities()));
                     } catch (IOException | ClassNotFoundException e) {
@@ -58,7 +58,8 @@ public class ClientController extends GameController {
     }
 
     public void sendCommand(String command) {
-        outStream.print(command);
         System.out.println(command);
+        outStream.println(command);
+        outStream.flush();
     }
 }
