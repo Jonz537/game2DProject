@@ -36,26 +36,20 @@ public class GameProtocol implements Runnable {
     public GameProtocol(Socket client, GameController controller) {
         this.client = client;
         this.controller = controller;
-        try {
-            objectOutputStream = new ObjectOutputStream(client.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     @Override
     public void run() {
         try {
             System.out.println("new gamer:" + client.getInetAddress() + " " + client.getLocalPort());
-            System.out.println(client);
-            controller.addPlayer(client);
-            System.out.println(controller.getAllPlayers());
 
+            controller.addPlayer(client);
+
+            objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             inStream = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-            Timer timer = new Timer();
-            TimerTask timerTask = new TimerTask() {
+            Timer updateSender = new Timer();
+            TimerTask updateSenderTask = new TimerTask() {
                 @Override
                 public void run() {
                     try {
@@ -72,7 +66,7 @@ public class GameProtocol implements Runnable {
                     }
                 }
             };
-            timer.scheduleAtFixedRate(timerTask, 0, 5);
+            updateSender.scheduleAtFixedRate(updateSenderTask, 0, 5);
 
             String message;
             while ((message = inStream.readLine()) != null) {
@@ -83,6 +77,8 @@ public class GameProtocol implements Runnable {
             System.out.println("Client disconnected abruptly");
             controller.removePlayer(client);
             try {
+                inStream.close();
+                objectOutputStream.close();
                 client.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

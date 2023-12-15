@@ -10,6 +10,10 @@ import java.io.Serializable;
 
 public class Tent extends GameObject implements Serializable {
 
+    public Tent(Tent tent) {
+        super(tent);
+    }
+
     public Tent(Vector pos, int height) {
         super(pos, height);
 
@@ -18,14 +22,10 @@ public class Tent extends GameObject implements Serializable {
 
     }
 
-    public Tent(Tent tent) {
-        super(tent);
-    }
-
     @Override
     public BufferedImage imageToBuffered(Image imageToTransform) {
 
-        Image anotherImage = imageToTransform.getScaledInstance(2 * size, size, Image.SCALE_SMOOTH);
+        Image anotherImage = imageToTransform.getScaledInstance(size, size, Image.SCALE_SMOOTH);
 
         AffineTransform transform = new AffineTransform();
         transform.translate(0, size);

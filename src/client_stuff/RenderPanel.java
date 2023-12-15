@@ -26,13 +26,14 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     protected ClientController gameController;
     protected Image sceneBackground;
 
-    int lightLevel = 25, darkLevel = 255;
     public final static double worldSize = 1000.;
     protected double converter, maxConverter;
 
+    int lightLevel = 25, darkLevel = 255;
     double torchRadius = worldSize / 3.5;
     protected Point2D mousePos = new Point(0, 0);
 
+    Set<Integer> currentActiveControls = new HashSet<>();
     HashMap<String, Image> imageData = new HashMap<>();
 
     public RenderPanel(ClientController controller) {
@@ -57,7 +58,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        //TODO connection
 
         Timer renderTimer = new Timer(16, (e) -> {
             repaint();
@@ -71,8 +71,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        //TODO entities
-//        System.out.println(gameController.getEntities());
         // antialiasing
         Graphics2D graphics = (Graphics2D) g;
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -115,11 +113,11 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         }
 
         // TODO debug mode
-        Area a = new Area(go.getCollisionBox());
-        graphics.setColor(new Color(255,0,0,128));
-        graphics.fill(a);
-        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
-        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
+//        Area a = new Area(go.getCollisionBox());
+//        graphics.setColor(new Color(255,0,0,128));
+//        graphics.fill(a);
+//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
+//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
     }
 
     private void lightRender(Graphics2D graphics) {
@@ -162,7 +160,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                         (int) combinedRadius, (int) combinedRadius);
             }
         }
-        new Color(121, 67, 3);
+
         if (drawTorchAlone) {
             graphics.setPaint(createRadialLight((Point) mousePosScaled, torchRadius, new Color(121, 67, 3, darkLevel)));
             graphics.fillOval((int) (mousePosScaled.getX() - torchRadius / 2.),
@@ -183,8 +181,8 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                 new Color[]{new Color(0, 0, 0, lightLevel),
                         color});
     }
-
     // pixel coordinate to world coordinate
+
     public Point2D pixelsToPos(Point2D point2D) {
 
         int x = (int) ((point2D.getX() - getWidth() / 2 + gameController.getPlayer().getX() * converter / worldSize) * worldSize / converter);
@@ -197,8 +195,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     public void keyTyped(KeyEvent e) {
 
     }
-
-    Set<Integer> currentActiveControls = new HashSet<>();
 
     // player movement
     @Override

@@ -14,6 +14,30 @@ public class GameController {
         this.model = model;
     }
 
+    public Player getPlayer() {
+        return model.getPlayer();
+    }
+
+    public Player getPlayer(Socket client) {
+        return model.getPlayer(client);
+    }
+
+    public void setPlayer(Player player) {
+        model.setPlayer(player);
+    }
+
+    public void addPlayer(Socket socket) {
+        model.addPlayer(socket);
+    }
+
+    public void removePlayer(Socket socket) {
+        model.removePlayer(socket);
+    }
+
+    public HashMap<Socket, Player> getAllPlayers() {
+        return model.players;
+    }
+
     public void addEntity(GameObject gameObject) {
         model.addEntity(gameObject);
     }
@@ -26,13 +50,10 @@ public class GameController {
         model.setEntities(entities);
     }
 
-    public HashMap<Socket, Player> getAllPlayers() {
-        return model.players;
-    }
-
     public ArrayList<GameObject> createEntitiesCopy(ArrayList<GameObject> entities) {
-           ArrayList<GameObject> copy = new ArrayList<>();
-           for (GameObject go: entities) {
+           ArrayList<GameObject> copy = new ArrayList<>(), syncEntities = new ArrayList<>(entities);
+
+           for (GameObject go: syncEntities) {
                if (go instanceof Bullet) {
                    copy.add(new Bullet((Bullet) go));
                } else if (go instanceof Campfire) {
@@ -56,35 +77,11 @@ public class GameController {
         model.update();
     }
 
-    public Player getPlayer() {
-        return model.getPlayer();
-    }
-
     public void checkCollision() {
         model.checkCollisions();
     }
 
     public void updateImages() {
         model.updateImages();
-    }
-
-    public Vector getSpawnPoint() {
-        return model.getSpawnPoint();
-    }
-
-    public void addPlayer(Socket socket) {
-        model.addPlayer(socket);
-    }
-
-    public void removePlayer(Socket socket) {
-        model.removePlayer(socket);
-    }
-
-    public void setPlayer(Player player) {
-        model.setPlayer(player);
-    }
-
-    public Player getPlayer(Socket client) {
-        return model.getPlayer(client);
     }
 }

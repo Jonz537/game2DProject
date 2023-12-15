@@ -41,7 +41,6 @@ public class ClientController extends GameController {
                 public void run() {
                     try {
                         GameParser gameParser = new GameParser((GameParser) objectInputStream.readObject());
-//                        System.out.println(gameParser.getEntities());
                         setPlayer(new Player(gameParser.getPlayer()));
                         setEntities(new ArrayList<>(gameParser.getEntities()));
                     } catch (IOException | ClassNotFoundException e) {
@@ -58,7 +57,6 @@ public class ClientController extends GameController {
     }
 
     public void sendCommand(String command) {
-//        System.out.println(command);
         outStream.println(command);
         outStream.flush();
     }

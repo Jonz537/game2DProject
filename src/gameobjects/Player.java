@@ -11,6 +11,12 @@ public class Player extends GameObject implements Serializable {
     public int jumpToken = 0;
     public final double jumpSpeed = 35;
 
+    public Player(Player player) {
+        super(player);
+        this.touchingFloor = player.touchingFloor;
+        this.jumpToken = player.jumpToken;
+    }
+
     public Player(Vector pos, int size) {
         super(new Vector(pos), size);
         vel = new Vector(0,0,0);
@@ -21,10 +27,12 @@ public class Player extends GameObject implements Serializable {
         imageRef = "./assets/player.png";
     }
 
-    public Player(Player player) {
-        super(player);
-        this.touchingFloor = player.touchingFloor;
-        this.jumpToken = player.jumpToken;
+    public void setTouchingFloor(boolean touchingFloor) {
+        this.touchingFloor = touchingFloor;
+    }
+
+    public void die(Vector spawnPoint) {
+        pos = new Vector(spawnPoint);
     }
 
     @Override
@@ -42,10 +50,6 @@ public class Player extends GameObject implements Serializable {
         accY = touchingFloor? 0: 0.03;
     }
 
-    public void setTouchingFloor(boolean touchingFloor) {
-        this.touchingFloor = touchingFloor;
-    }
-
 
     public void accelerate() {
         vel.addX(1);
@@ -60,10 +64,6 @@ public class Player extends GameObject implements Serializable {
         if (touchingFloor) {
             jumpToken++;
         }
-    }
-
-    public void die(Vector spawnPoint) {
-        pos = new Vector(spawnPoint);
     }
 
 }

@@ -12,12 +12,11 @@ import java.io.*;
 public class GameObject implements Serializable {
 
     protected Vector pos, vel = new Vector(0,0,0);
-    protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
 
+    protected Rectangle2D.Double collisionBox;
     protected String imageRef;
-//    public transient BufferedImage image;
 
     public GameObject(GameObject go) {
         pos = new Vector(go.getPos());
@@ -36,35 +35,14 @@ public class GameObject implements Serializable {
         this.size = size;
     }
 
-    public GameObject(Vector pos, int size, double accX, double accY) {
-        this.pos = pos;
-        this.size = size;
-        this.accX = accX;
-        this.accY = accY;
-    }
-
     public GameObject(Vector pos, Vector vel, int size) {
         this.pos = pos;
         this.vel = vel;
         this.size = size;
     }
 
-    public GameObject(Vector pos, Rectangle2D.Double collisionBox, int size) {
+    public GameObject(Vector pos, int size, double accX, double accY) {
         this.pos = pos;
-        this.collisionBox = collisionBox;
-        this.size = size;
-    }
-
-    public GameObject(Vector pos, Vector vel, Rectangle2D.Double collisionBox, int size) {
-        this.pos = pos;
-        this.vel = vel;
-        this.collisionBox = collisionBox;
-        this.size = size;
-    }
-
-    public GameObject(Vector pos, Rectangle2D.Double collisionBox, int size, double accX, double accY) {
-        this.pos = pos;
-        this.collisionBox = collisionBox;
         this.size = size;
         this.accX = accX;
         this.accY = accY;
@@ -95,6 +73,10 @@ public class GameObject implements Serializable {
         return pos.getY();
     }
 
+    public double getZ() {
+        return pos.getZ();
+    }
+
     public double getVelX() {
         return vel.getX();
     }
@@ -115,24 +97,16 @@ public class GameObject implements Serializable {
         pos.setY(newPos);
     }
 
-    public void setPos(Vector pos) {
-        this.pos = new Vector(pos);
-    }
-
-    public void setVelX(double newVel) {
-        vel.setX(newVel);
-    }
-
     public void setVelY(double newVel) {
         vel.setY(newVel);
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public Rectangle2D.Double getCollisionBox() {
         return collisionBox;
+    }
+
+    public String getImageRef() {
+        return imageRef;
     }
 
     public void update() {
@@ -141,6 +115,15 @@ public class GameObject implements Serializable {
 
     public void animate() {
 
+    }
+
+    public Image getImage() {
+        try {
+            return ImageIO.read(new File(imageRef));
+        } catch (IOException e) {
+            System.out.println(this);
+            throw new RuntimeException(e);
+        }
     }
 
     public BufferedImage imageToBuffered(Image imageToTransform) {
@@ -158,19 +141,6 @@ public class GameObject implements Serializable {
         bGr.dispose();
 
         return bImage;
-    }
-
-    public String getImageRef() {
-        return imageRef;
-    }
-
-    public Image getImage() {
-        try {
-            return ImageIO.read(new File(imageRef));
-        } catch (IOException e) {
-            System.out.println(this);
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

@@ -13,6 +13,12 @@ public class Campfire extends GameObject implements Serializable {
     private final double lightRadius;
     private int currentFrame;
 
+    public Campfire(Campfire campfire) {
+        super(campfire);
+        this.lightRadius = campfire.lightRadius;
+        this.currentFrame = campfire.currentFrame;
+    }
+
     public Campfire(Vector pos, double lightRadius) {
         super(pos, 50);
         this.lightRadius = lightRadius;
@@ -20,12 +26,6 @@ public class Campfire extends GameObject implements Serializable {
         currentFrame = new Random().nextInt(0, 4);
 
         imageRef = "./assets/fire_" + currentFrame + ".png";
-    }
-
-    public Campfire(Campfire campfire) {
-        super(campfire);
-        this.lightRadius = campfire.lightRadius;
-        this.currentFrame = campfire.currentFrame;
     }
 
     @Override
