@@ -57,9 +57,11 @@ public class GameProtocol implements Runnable {
                 @Override
                 public void run() {
                     try {
-                        GameParser gameParser = new GameParser(new Player(controller.getPlayer(client)),
-                                controller.createEntitiesCopy(controller.getEntities()));
-                        objectOutputStream.writeObject(gameParser);
+                        synchronized (this) {
+                            GameParser gameParser = new GameParser(new Player(controller.getPlayer(client)),
+                                    controller.createEntitiesCopy(controller.getEntities()));
+                            objectOutputStream.writeObject(gameParser);
+                        }
                         objectOutputStream.flush();
 
                     } catch (IOException e) {
