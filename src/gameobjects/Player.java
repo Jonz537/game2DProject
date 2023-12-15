@@ -23,6 +23,8 @@ public class Player extends GameObject implements Serializable {
 
     public Player(Player player) {
         super(player);
+        this.touchingFloor = player.touchingFloor;
+        this.jumpToken = player.jumpToken;
     }
 
     @Override

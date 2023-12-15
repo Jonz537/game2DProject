@@ -11,7 +11,7 @@ import java.io.*;
 
 public class GameObject implements Serializable {
 
-    protected Vector pos, vel;
+    protected Vector pos, vel = new Vector(0,0,0);
     protected Rectangle2D.Double collisionBox;
     protected int size;
     public double accX = 0., accY = 0.3;
@@ -19,24 +19,15 @@ public class GameObject implements Serializable {
     protected String imageRef;
 //    public transient BufferedImage image;
 
-    public GameObject(Player player) {
-        pos = new Vector(player.getPos());
-        vel = new Vector(player.getVel());
-        collisionBox = new Rectangle2D.Double(player.getCollisionBox().getX(), player.getCollisionBox().getY(),
-                player.getCollisionBox().width, player.getCollisionBox().height);
-        size = player.getSize();
-        accX = player.accX;
-        accY = player.accY;
-    }
-
-    public GameObject(Ghost player) {
-        pos = new Vector(player.getPos());
-        vel = new Vector(player.getVel());
-        collisionBox = new Rectangle2D.Double(player.getCollisionBox().getX(), player.getCollisionBox().getY(),
-                player.getCollisionBox().width, player.getCollisionBox().height);
-        size = player.getSize();
-        accX = player.accX;
-        accY = player.accY;
+    public GameObject(GameObject go) {
+        pos = new Vector(go.getPos());
+        vel = new Vector(go.getVel());
+        collisionBox = new Rectangle2D.Double(go.getCollisionBox().getX(), go.getCollisionBox().getY(),
+                go.getCollisionBox().width, go.getCollisionBox().height);
+        size = go.getSize();
+        accX = go.accX;
+        accY = go.accY;
+        imageRef = go.getImageRef();
     }
 
 

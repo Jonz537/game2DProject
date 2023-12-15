@@ -18,6 +18,10 @@ public class Tent extends GameObject implements Serializable {
 
     }
 
+    public Tent(Tent tent) {
+        super(tent);
+    }
+
     @Override
     public BufferedImage imageToBuffered(Image imageToTransform) {
 

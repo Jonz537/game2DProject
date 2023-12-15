@@ -22,6 +22,12 @@ public class Campfire extends GameObject implements Serializable {
         imageRef = "./assets/fire_" + currentFrame + ".png";
     }
 
+    public Campfire(Campfire campfire) {
+        super(campfire);
+        this.lightRadius = campfire.lightRadius;
+        this.currentFrame = campfire.currentFrame;
+    }
+
     @Override
     public void animate() {
         currentFrame = (currentFrame + 1) % 4;

@@ -214,19 +214,10 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     private void applyControls() {
         for (Integer i: currentActiveControls) {
             switch (i) {
-                case KeyEvent.VK_D -> System.out.println("d");
-                case KeyEvent.VK_A -> System.out.println("a");
-                case KeyEvent.VK_SPACE -> System.out.println("w");
-                case KeyEvent.VK_ENTER -> System.out.println("s");
-//                case KeyEvent.VK_D -> gameController.sendCommand("rx");
-//                case KeyEvent.VK_A -> gameController.sendCommand("sx");
-//                case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
-//                case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
-                //TODO connection
-//            case KeyEvent.VK_D -> gameController.getPlayer().accelerate();
-//            case KeyEvent.VK_A -> gameController.getPlayer().decelerate();
-//            case KeyEvent.VK_SPACE -> gameController.getPlayer().jump();
-//            case KeyEvent.VK_ENTER -> gameController.addEntity(new Bullet(gameController.getPlayer().getPos(), 25, 10, 10, 0.05));
+                case KeyEvent.VK_D -> gameController.sendCommand("rx");
+                case KeyEvent.VK_A -> gameController.sendCommand("sx");
+                case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
+                case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
             }
         }
     }

@@ -72,6 +72,7 @@ public class Game {
             }
             gameObject.update();
         });
+
         checkPlayerDeath();
         checkToDestroyed();
     }
@@ -105,23 +106,29 @@ public class Game {
         Set<GameObject> toDestroy = new HashSet<>();
 
         player.setTouchingFloor(false);
-        for (GameObject go: getEntities()) {
-            //TODO collision left right
-            if (go instanceof Platform && player.getCollisionBox().intersects(go.getCollisionBox())) {
+        for (GameObject playerToBeChecked: getEntities()) {
 
-                if (player.getVelY() <= 0) {
-                    player.setVelY(0);
-                    player.setTouchingFloor(true);
-                } else {
-                    player.setY(player.getY() - player.getVelY());
+            if (playerToBeChecked instanceof Player) {
+
+                for (GameObject go: getEntities()) {
+                    //TODO collision left right
+                    if (go instanceof Platform && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
+
+                        if (playerToBeChecked.getVelY() <= 0) {
+                            playerToBeChecked.setVelY(0);
+                            ((Player) playerToBeChecked).setTouchingFloor(true);
+                        } else {
+                            playerToBeChecked.setY(playerToBeChecked.getY() - playerToBeChecked.getVelY());
+                        }
+                    }
+                    if (go instanceof  Tent && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
+                        setSpawnPoint(go.getPos());
+                    }
+                    if (go instanceof Ghost && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
+                        ((Player) playerToBeChecked).die(spawnPoint);
+                        toDestroy.add(go);
+                    }
                 }
-            }
-            if (go instanceof  Tent && player.getCollisionBox().intersects(go.getCollisionBox())) {
-                setSpawnPoint(go.getPos());
-            }
-            if (go instanceof Ghost && player.getCollisionBox().intersects(go.getCollisionBox())) {
-                player.die(spawnPoint);
-                toDestroy.add(go);
             }
         }
 

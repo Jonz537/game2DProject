@@ -20,6 +20,11 @@ public class Platform extends GameObject implements Serializable {
         imageRef = "./assets/platform.png";
     }
 
+    public Platform(Platform platform) {
+        super(platform);
+    }
+
+
     @Override
     public BufferedImage imageToBuffered(Image imageToTransform) {
         int imageTimes = (size / IMG_LENGTH);

@@ -58,7 +58,7 @@ public class GameProtocol implements Runnable {
                 public void run() {
                     try {
                         GameParser gameParser = new GameParser(new Player(controller.getPlayer(client)),
-                                new ArrayList<>(controller.getEntities()));
+                                controller.createEntitiesCopy(controller.getEntities()));
                         objectOutputStream.writeObject(gameParser);
                         objectOutputStream.flush();
 

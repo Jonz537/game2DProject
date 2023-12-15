@@ -15,6 +15,11 @@ public class Bullet extends GameObject implements Serializable {
         collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), size, size);
     }
 
+    public Bullet(Bullet bullet) {
+        super(bullet);
+        this.ttl = bullet.ttl;
+    }
+
     public void update() {
         vel.addY(-((vel.getY() > 3) ? 3 : accY));
         pos.addX(vel.getX());
