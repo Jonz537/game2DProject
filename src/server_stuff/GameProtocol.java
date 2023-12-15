@@ -28,7 +28,7 @@ public class GameProtocol implements Runnable {
 
     {
         commandMap.put("rx", () -> controller.getPlayer(client).accelerate());
-        commandMap.put("dx", () -> controller.getPlayer(client).decelerate());
+        commandMap.put("sx", () -> controller.getPlayer(client).decelerate());
         commandMap.put("jump", () -> controller.getPlayer(client).jump());
         commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 10, 10, 0.05)));
     }
@@ -80,7 +80,7 @@ public class GameProtocol implements Runnable {
 
             String message;
             while ((message = inStream.readLine()) != null) {
-                commandMap.get(message).run();
+                new Thread(commandMap.get(message)).start();
             }
 
         } catch (IOException e) {

@@ -105,11 +105,11 @@ public class Game {
     public void checkCollisions() {
         Set<GameObject> toDestroy = new HashSet<>();
 
-        player.setTouchingFloor(false);
         for (GameObject playerToBeChecked: getEntities()) {
 
             if (playerToBeChecked instanceof Player) {
 
+                ((Player) playerToBeChecked).setTouchingFloor(false);
                 for (GameObject go: getEntities()) {
                     //TODO collision left right
                     if (go instanceof Platform && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {

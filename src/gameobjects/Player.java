@@ -39,8 +39,7 @@ public class Player extends GameObject implements Serializable {
         jumpToken = (jumpToken != 0) ? ((jumpToken > 0) ? jumpToken - 1 : jumpToken + 1) : 0;
         collisionBox = new Rectangle2D.Double(pos.getX() - (double) size / 2, pos.getY() - (double) size / 2, size, size);
 
-        accY = touchingFloor? 0: 0.3;
-
+        accY = touchingFloor? 0: 0.03;
     }
 
     public void setTouchingFloor(boolean touchingFloor) {
@@ -49,11 +48,11 @@ public class Player extends GameObject implements Serializable {
 
 
     public void accelerate() {
-        vel.addX(3);
+        vel.addX(1);
     }
 
     public void decelerate() {
-        vel.addX(-3);
+        vel.addX(-1);
     }
 
     public void jump() {

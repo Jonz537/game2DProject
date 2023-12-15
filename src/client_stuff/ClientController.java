@@ -58,7 +58,7 @@ public class ClientController extends GameController {
     }
 
     public void sendCommand(String command) {
-        System.out.println(command);
+//        System.out.println(command);
         outStream.println(command);
         outStream.flush();
     }
