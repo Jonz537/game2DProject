@@ -30,7 +30,7 @@ public class GameProtocol implements Runnable {
         commandMap.put("rx", () -> controller.getPlayer(client).accelerate());
         commandMap.put("sx", () -> controller.getPlayer(client).decelerate());
         commandMap.put("jump", () -> controller.getPlayer(client).jump());
-        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 0.5, 0, 0)));
+        commandMap.put("ball", () -> controller.addEntity(new Bullet(controller.getPlayer(client).getPos(), 25, 3, 0, 0)));
     }
 
     public GameProtocol(Socket client, GameController controller) {

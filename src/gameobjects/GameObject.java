@@ -41,6 +41,12 @@ public class GameObject implements Serializable {
         this.size = size;
     }
 
+    public GameObject(Vector pos, Rectangle2D.Double collisionBox, int size) {
+        this.pos = pos;
+        this.collisionBox = collisionBox;
+        this.size = size;
+    }
+
     public GameObject(Vector pos, int size, double accX, double accY) {
         this.pos = pos;
         this.size = size;
@@ -107,6 +113,10 @@ public class GameObject implements Serializable {
 
     public String getImageRef() {
         return imageRef;
+    }
+
+    public Double distance(GameObject go) {
+        return Point.distance(pos.getX(), pos.getY(), go.getX(), go.getY());
     }
 
     public void update() {

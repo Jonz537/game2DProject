@@ -8,11 +8,12 @@ import java.util.*;
 public class Game {
 
     protected Player player;
-    protected HashMap<Socket, Player> players = new HashMap<>();
-    protected ArrayList<GameObject> entities = new ArrayList<>();
     protected Vector spawnPoint = new Vector(0,0,0);
 
-    private Random random = new Random();
+    protected HashMap<Socket, Player> players = new HashMap<>();
+    protected ArrayList<GameObject> entities = new ArrayList<>();
+
+    Random random = new Random();
 
     public Game() {
         player = new Player(new Vector(0,0,0), 0);
@@ -25,9 +26,11 @@ public class Game {
         entities.add(new Tent(new Vector(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
         entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
+        entities.add(new EndGoal(new Vector(9 * Platform.IMG_LENGTH, -300, 0), 100));
+
         entities.add(new Platform(new Vector(0, -200, 0), Platform.IMG_LENGTH * 2));
         entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
-        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 7));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 30));
 
     }
 
@@ -37,7 +40,7 @@ public class Game {
 
 
     public Player getPlayer(Socket client) {
-        return players.get(client);
+        return players.getOrDefault(client, null);
     }
 
     public void setPlayer(Player player) {
@@ -70,16 +73,14 @@ public class Game {
         entities.remove(gameObject);
     }
 
-    public Vector getSpawnPoint() {
-        return spawnPoint;
-    }
-
     public void setSpawnPoint(Vector spawnPoint) {
         this.spawnPoint = new Vector(spawnPoint.getX(), spawnPoint.getY() + 50, 0);
     }
 
     public void update() {
         synchronized (entities) {
+
+            spawnGhost();
 
             entities.sort(Comparator.comparingDouble(GameObject::getZ));
 
@@ -103,32 +104,36 @@ public class Game {
         }
     }
 
+    private void spawnGhost() {
+        int chance = random.nextInt(0, 20000);
+        if (!players.isEmpty() && chance == 1) {
+            Player randomPlayer = getPlayer(Utils.getRandomKey(players));
+            Vector ghostSpawn = new Vector(randomPlayer.getPos());
+            ghostSpawn.addX(random.nextDouble(1000, 1100));
+            ghostSpawn.addY(random.nextDouble(-200, 200));
+            entities.add(new Ghost(ghostSpawn, 0.3, 50, randomPlayer));
+        }
+    }
+
     public void checkCollisions() {
         Set<GameObject> toDestroy = new HashSet<>();
 
         synchronized (entities) {
-            for (GameObject playerToBeChecked: getEntities()) {
+            for (Map.Entry<Socket, Player> playerEntry : players.entrySet()) {
 
-                if (playerToBeChecked instanceof Player) {
-                    ((Player) playerToBeChecked).setTouchingFloor(false);
-                    for (GameObject go: getEntities()) {
-                        //TODO collision left right
-                        if (go instanceof Platform && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
+                playerEntry.getValue().setTouchingFloor(false);
+                for (GameObject go: getEntities()) {
 
-                            if (playerToBeChecked.getVelY() <= 0) {
-                                playerToBeChecked.setVelY(0);
-                                ((Player) playerToBeChecked).setTouchingFloor(true);
-                            } else {
-                                playerToBeChecked.setY(playerToBeChecked.getY() - playerToBeChecked.getVelY());
-                            }
-                        }
-                        if (go instanceof  Tent && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
-                            setSpawnPoint(go.getPos());
-                        }
-                        if (go instanceof Ghost && playerToBeChecked.getCollisionBox().intersects(go.getCollisionBox())) {
-                            ((Player) playerToBeChecked).die(spawnPoint);
-                            toDestroy.add(go);
-                        }
+                    if (go instanceof Platform) {
+                        playerEntry.getValue().collidePlatform(go.getCollisionBox());
+                    }
+                    if (go instanceof  Tent && playerEntry.getValue().getCollisionBox().intersects(go.getCollisionBox())) {
+                        setSpawnPoint(go.getPos());
+                    }
+                    if (go instanceof Ghost && playerEntry.getValue().getCollisionBox().intersects(go.getCollisionBox())) {
+                        System.out.println("die");
+                        playerEntry.getValue().die(spawnPoint);
+                        toDestroy.add(go);
                     }
                 }
             }
@@ -140,14 +145,9 @@ public class Game {
     }
 
     private void checkPlayerDeath() {
-        synchronized (this) {
-            for (GameObject go: entities) {
-                if (go instanceof Player) {
-                    if (go.getY() < -600) {
-                        go.setVelY(0);
-                        ((Player) go).die(spawnPoint);
-                    }
-                }
+        synchronized (players) {
+            for (Map.Entry<Socket, Player> entry : players.entrySet()) {
+                entry.getValue().outOfBounds(spawnPoint);
             }
         }
     }

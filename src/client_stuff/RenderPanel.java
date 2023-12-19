@@ -84,6 +84,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         graphics.scale(converter / worldSize, converter / worldSize);
 
         // draw background stuff
+        // TODO fix with multiple players
         int chunkXPos = (int) Math.floor((gameController.getPlayer().getX() + (worldSize / 2)) / 4 / worldSize);
         graphics.drawImage(sceneBackground, (int) (chunkXPos * 4 * worldSize + (-9 * worldSize / 2)), (int) (-worldSize / 2), this);
         graphics.drawImage(sceneBackground, (int) (chunkXPos * 4 * worldSize + (-worldSize / 2)), (int) (-worldSize / 2), this);
@@ -113,11 +114,11 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         }
 
         // TODO debug mode
-//        Area a = new Area(go.getCollisionBox());
-//        graphics.setColor(new Color(255,0,0,128));
-//        graphics.fill(a);
-//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
-//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
+        Area a = new Area(go.getCollisionBox());
+        graphics.setColor(new Color(255,0,0,128));
+        graphics.fill(a);
+        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
+        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
     }
 
     private void lightRender(Graphics2D graphics) {
@@ -169,7 +170,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         }
 
         graphics.setColor(Color.BLACK);
-        graphics.fill(square);
+//        graphics.fill(square);
     }
 
     private RadialGradientPaint createRadialLight(Point center, double radius, Color color) {

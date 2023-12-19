@@ -32,7 +32,15 @@ public class Player extends GameObject implements Serializable {
     }
 
     public void die(Vector spawnPoint) {
+        setVelY(0);
         pos = new Vector(spawnPoint);
+    }
+
+    public void outOfBounds(Vector spawnPoint) {
+        if (getY() < -600) {
+            setVelY(0);
+            pos = new Vector(spawnPoint);
+        }
     }
 
     @Override
@@ -50,6 +58,16 @@ public class Player extends GameObject implements Serializable {
         accY = touchingFloor? 0: 0.03;
     }
 
+    public void collidePlatform(Rectangle2D.Double platoform) {
+        if (getCollisionBox().intersects(platoform)){
+            if (getVelY() <= 0) {
+                setVelY(0);
+                setTouchingFloor(true);
+            } else {
+                setY(getY() - getVelY());
+            }
+        }
+    }
 
     public void accelerate() {
         vel.addX(1);
