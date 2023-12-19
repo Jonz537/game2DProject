@@ -120,7 +120,6 @@ public class Game {
 
         synchronized (entities) {
             for (Map.Entry<Socket, Player> playerEntry : players.entrySet()) {
-
                 playerEntry.getValue().setTouchingFloor(false);
                 for (GameObject go: getEntities()) {
 
@@ -131,7 +130,6 @@ public class Game {
                         setSpawnPoint(go.getPos());
                     }
                     if (go instanceof Ghost && playerEntry.getValue().getCollisionBox().intersects(go.getCollisionBox())) {
-                        System.out.println("die");
                         playerEntry.getValue().die(spawnPoint);
                         toDestroy.add(go);
                     }
@@ -153,16 +151,24 @@ public class Game {
     }
 
     private void checkToDestroyed() {
-        Set<Bullet> toBeDestroyed = new HashSet<>();
-        for (GameObject go: entities) {
-            if (go instanceof Bullet && ((Bullet) go).timeOut()) {
-                toBeDestroyed.add((Bullet) go);
+        Set<GameObject> toBeDestroyed = new HashSet<>();
+        synchronized (entities) {
+            for (GameObject go: entities) {
+                if (go instanceof Bullet) {
+                    if (((Bullet) go).timeOut()) {
+                        toBeDestroyed.add(go);
+                    }
+                    for (GameObject ghost: entities) {
+                        if (ghost instanceof Ghost && go.getCollisionBox().intersects(ghost.getCollisionBox())) {
+                            toBeDestroyed.add(ghost);
+                            toBeDestroyed.add(go);
+                        }
+                    }
+                }
+            }
+            for (GameObject go: toBeDestroyed) {
+                entities.remove(go);
             }
         }
-
-        for (Bullet bullet: toBeDestroyed) {
-            entities.remove(bullet);
-        }
-
     }
 }
