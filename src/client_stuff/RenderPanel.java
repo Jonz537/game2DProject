@@ -1,6 +1,7 @@
 package client_stuff;
 
 import gameobjects.*;
+import utils.SoundController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,6 +33,9 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
 
     Set<Integer> currentActiveControls = new HashSet<>();
     HashMap<String, Image> imageData = new HashMap<>();
+
+    //TODO audio bullshits
+//    SoundController soundController = SoundController.STEPS;
 
     public RenderPanel(ClientController controller) {
         gameController = controller;
@@ -210,8 +214,14 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     private void applyControls() {
         for (Integer i: currentActiveControls) {
             switch (i) {
-                case KeyEvent.VK_D -> gameController.sendCommand("rx");
-                case KeyEvent.VK_A -> gameController.sendCommand("sx");
+                case KeyEvent.VK_D -> {
+                    gameController.sendCommand("rx");
+//                    soundController.play();
+                }
+                case KeyEvent.VK_A -> {
+                    gameController.sendCommand("sx");
+//                    soundController.play();
+                }
                 case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
                 case KeyEvent.VK_SHIFT -> {
                     long currentTime = System.currentTimeMillis();

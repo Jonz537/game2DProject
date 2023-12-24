@@ -7,9 +7,7 @@ import java.io.File;
 
 public enum SoundController {
 
-    FIRE("fire.wav"),
-    BEAT1("beat1.wav"),
-    BEAT2("beat2.wav");
+    STEPS("running.wav");
 
     String filename;
     Clip clip;
@@ -21,7 +19,7 @@ public enum SoundController {
 
     private Clip loadSoundTrack(String filename) {
         try {
-            File audioFile = new File("./assets/" + filename);
+            File audioFile = new File("./assets/sounds/" + filename);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
             Clip clip = AudioSystem.getClip();
 

@@ -12,6 +12,7 @@ public class MainGui extends JDialog {
     ClientController controller;
 
     public MainGui() {
+        setUndecorated(true);
         setContentPane(contentPane);
         setModal(true);
 
@@ -21,18 +22,24 @@ public class MainGui extends JDialog {
 
         RenderPanel renderPanel = new RenderPanel(controller);
         contentPane.add(renderPanel);
+
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.setFullScreenWindow(this);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        //TODO fullscreen mode
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
+            MainGui dialog = new MainGui();
 
-        MainGui dialog = new MainGui();
-        dialog.pack();
-        dialog.setVisible(true);
-
-        System.exit(0);
+            dialog.setVisible(true);
+        });
     }
 }
