@@ -20,17 +20,25 @@ public class Game {
     }
 
     public void init() {
+        // TODO maybe makes the levels not hardcoded but json or something
+        entities.add(new Platform(new Vector(0, -200, 2), Platform.IMG_LENGTH * 3));
+        entities.add(new Campfire(new Vector(0, -130, 1), 150));
 
-        entities.add(new Campfire(new Vector(0, -130, 0), 150));
-        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 3, -30, 0), 350));
+
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 3, -100, 3), Platform.IMG_LENGTH * 4));
+        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 3, -30, 2), 350));
         entities.add(new Tent(new Vector(150 + Platform.IMG_LENGTH * 3, -30, 0), 80));
-        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 7, -230, 0), 150));
 
-        entities.add(new EndGoal(new Vector(9 * Platform.IMG_LENGTH, -300, 0), 100));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 3), Platform.IMG_LENGTH * 6));
+        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 7, -230, 1), 150));
 
-        entities.add(new Platform(new Vector(0, -200, 0), Platform.IMG_LENGTH * 2));
-        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 3, -100, 0), Platform.IMG_LENGTH * 4));
-        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 7, -300, 0), Platform.IMG_LENGTH * 30));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 13, -150, 3), Platform.IMG_LENGTH * 4));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 10, 100, 3), Platform.IMG_LENGTH * 3));
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 13, 350, 3), Platform.IMG_LENGTH * 5));
+
+        entities.add(new Platform(new Vector(Platform.IMG_LENGTH * 19, -100, 3), Platform.IMG_LENGTH * 5));
+        entities.add(new Campfire(new Vector(100 + Platform.IMG_LENGTH * 19, -30, 1), 200));
+        entities.add(new Tent(new Vector(150 + Platform.IMG_LENGTH * 19, -30, 0), 80));
 
     }
 
@@ -48,7 +56,7 @@ public class Game {
     }
 
     public void addPlayer(Socket client) {
-        Player play = new Player(new Vector(0,0,0), 50);
+        Player play = new Player(new Vector(0,0,2), 50);
         entities.add(play);
         players.put(client, play);
     }

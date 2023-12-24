@@ -22,7 +22,7 @@ public class ClientController extends GameController {
     public ClientController(Game model) {
         super(model);
         try {
-            socket = new Socket("localhost", 1234);
+            socket = new Socket("localhost", 1235);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

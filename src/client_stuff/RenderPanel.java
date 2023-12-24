@@ -5,10 +5,7 @@ import gameobjects.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -30,7 +27,7 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     protected double converter, maxConverter;
 
     int lightLevel = 25, darkLevel = 255;
-    double torchRadius = worldSize / 3.5;
+    double torchRadius = worldSize / 3;
     protected Point2D mousePos = new Point(0, 0);
 
     Set<Integer> currentActiveControls = new HashSet<>();
@@ -84,7 +81,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         graphics.scale(converter / worldSize, converter / worldSize);
 
         // draw background stuff
-        // TODO fix with multiple players
         int chunkXPos = (int) Math.floor((gameController.getPlayer().getX() + (worldSize / 2)) / 4 / worldSize);
         graphics.drawImage(sceneBackground, (int) (chunkXPos * 4 * worldSize + (-9 * worldSize / 2)), (int) (-worldSize / 2), this);
         graphics.drawImage(sceneBackground, (int) (chunkXPos * 4 * worldSize + (-worldSize / 2)), (int) (-worldSize / 2), this);
@@ -114,11 +110,11 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         }
 
         // TODO debug mode
-        Area a = new Area(go.getCollisionBox());
-        graphics.setColor(new Color(255,0,0,128));
-        graphics.fill(a);
-        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
-        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
+//        Area a = new Area(go.getCollisionBox());
+//        graphics.setColor(new Color(255,0,0,128));
+//        graphics.fill(a);
+//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
+//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
     }
 
     private void lightRender(Graphics2D graphics) {
@@ -169,8 +165,10 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                     (int) torchRadius, (int) torchRadius);
         }
 
+
+
         graphics.setColor(Color.BLACK);
-//        graphics.fill(square);
+        graphics.fill(square);
     }
 
     private RadialGradientPaint createRadialLight(Point center, double radius, Color color) {
@@ -182,7 +180,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
                 new Color[]{new Color(0, 0, 0, lightLevel),
                         color});
     }
-    // pixel coordinate to world coordinate
 
     public Point2D pixelsToPos(Point2D point2D) {
 
@@ -208,13 +205,21 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         currentActiveControls.remove(e.getKeyCode());
     }
 
+    private long lastBallCommandTime = System.currentTimeMillis();
+
     private void applyControls() {
         for (Integer i: currentActiveControls) {
             switch (i) {
                 case KeyEvent.VK_D -> gameController.sendCommand("rx");
                 case KeyEvent.VK_A -> gameController.sendCommand("sx");
                 case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
-                case KeyEvent.VK_ENTER -> gameController.sendCommand("ball");
+                case KeyEvent.VK_SHIFT -> {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastBallCommandTime >= 1000) {
+                        gameController.sendCommand("ball");
+                        lastBallCommandTime = currentTime;
+                    }
+                }
             }
         }
     }

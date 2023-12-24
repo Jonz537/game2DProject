@@ -42,18 +42,19 @@ public class MainServer {
                 controller.updateImages();
             }
         };
-        animations.scheduleAtFixedRate(animationTask, 0, 100);
+        animations.scheduleAtFixedRate(animationTask, 0, 150);
 
 
         ExecutorService executor = Executors.newCachedThreadPool();
 
         System.out.println("Server starting");
-        try (ServerSocket server = new ServerSocket(1234)) {
+        try (ServerSocket server = new ServerSocket(1235)) {
             while (true) {
                 executor.submit(new GameProtocol(server.accept(), controller));
             }
         } catch (IOException e) {
             System.out.println("Couldn't connect to the client");
+            e.printStackTrace();
         }
 
     }

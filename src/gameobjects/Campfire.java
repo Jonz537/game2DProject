@@ -25,13 +25,13 @@ public class Campfire extends GameObject implements Serializable {
         this.collisionBox = new Rectangle2D.Double(pos.getX(), pos.getY(), 50, 50);
         currentFrame = new Random().nextInt(0, 4);
 
-        imageRef = "./assets/fire_" + currentFrame + ".png";
+        imageRef = "./assets/fire/fire_" + currentFrame + ".png";
     }
 
     @Override
     public void animate() {
         currentFrame = (currentFrame + 1) % 4;
-        imageRef = "./assets/fire_" + currentFrame + ".png";
+        imageRef = "./assets/fire/fire_" + currentFrame + ".png";
     }
 
     public double getLightRadius() {
