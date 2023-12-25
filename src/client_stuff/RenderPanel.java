@@ -1,12 +1,18 @@
 package client_stuff;
 
-import gameobjects.*;
+import gameobjects.Campfire;
+import gameobjects.GameObject;
+import gameobjects.Platform;
+import gameobjects.Player;
 import utils.SoundController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -14,9 +20,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class RenderPanel extends JPanel implements KeyListener, MouseMotionListener {
@@ -34,8 +41,13 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
     Set<Integer> currentActiveControls = new HashSet<>();
     HashMap<String, Image> imageData = new HashMap<>();
 
-    //TODO audio bullshits
-//    SoundController soundController = SoundController.STEPS;
+    HashMap<Class<?>, SoundController> soundData = new HashMap<>();
+
+    {
+        soundData.put(Campfire.class, SoundController.FIRE);
+    }
+
+    SoundController stepsSoundController = SoundController.STEPS;
 
     public RenderPanel(ClientController controller) {
         gameController = controller;
@@ -64,8 +76,14 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             repaint();
             applyControls();
         });
-        renderTimer.start();
 
+        Timer soundTimer = new Timer(32, e -> {
+            gameController.updateSounds();
+            playSound();
+        });
+        soundTimer.start();
+
+        renderTimer.start();
     }
 
     @Override
@@ -96,8 +114,38 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
         for (GameObject go: gameController.getEntities()) {
             drawGameObject(graphics, go);
         }
+
         // drawing torchlight
         lightRender(graphics);
+
+        // TODO debug mode
+//        Area a = new Area(go.getCollisionBox());
+//        graphics.setColor(new Color(255,0,0,128));
+//        graphics.fill(a);
+//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
+//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
+
+    }
+
+    private void playSound() {
+
+        HashSet<SoundController> toBePlayed = new HashSet<>();
+
+        for (GameObject go: gameController.getEntities()) {
+            SoundController goSoundController = soundData.get(go.getClass());
+            if (go.isRenderSound() && goSoundController != null) {
+                goSoundController.setVolume((int) go.getDistaceVolume());
+                toBePlayed.add(goSoundController);
+            }
+        }
+
+        toBePlayed.forEach(SoundController::play);
+
+        for (Map.Entry<Class<?>, SoundController> soundControllerEntry : soundData.entrySet()) {
+            if (!toBePlayed.contains(soundControllerEntry.getValue())) {
+                soundControllerEntry.getValue().stopSound();
+            }
+        }
     }
 
     private void drawGameObject(Graphics2D graphics, GameObject go) {
@@ -113,12 +161,6 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             graphics.drawImage(go.imageToBuffered(imageData.get(go.getImageRef())), (int) go.getX(), (int) go.getY(), this);
         }
 
-        // TODO debug mode
-//        Area a = new Area(go.getCollisionBox());
-//        graphics.setColor(new Color(255,0,0,128));
-//        graphics.fill(a);
-//        graphics.drawLine(0, (int) - worldSize, 0, (int) worldSize);
-//        graphics.drawLine((int) - worldSize,0, (int) worldSize, 0);
     }
 
     private void lightRender(Graphics2D graphics) {
@@ -216,13 +258,16 @@ public class RenderPanel extends JPanel implements KeyListener, MouseMotionListe
             switch (i) {
                 case KeyEvent.VK_D -> {
                     gameController.sendCommand("rx");
-//                    soundController.play();
+                    stepsSoundController.play();
                 }
                 case KeyEvent.VK_A -> {
                     gameController.sendCommand("sx");
-//                    soundController.play();
+                    stepsSoundController.play();
                 }
-                case KeyEvent.VK_SPACE -> gameController.sendCommand("jump");
+                case KeyEvent.VK_SPACE -> {
+                    gameController.sendCommand("jump");
+                    stepsSoundController.play();
+                }
                 case KeyEvent.VK_SHIFT -> {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime - lastBallCommandTime >= 1000) {

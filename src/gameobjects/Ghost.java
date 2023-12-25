@@ -31,7 +31,8 @@ public class Ghost extends GameObject implements Serializable {
         this.target = target;
     }
 
-    public void followPlayer() {
+    @Override
+    public void update() {
         Vector playerDirection = new Vector(target.getX() - pos.getX(), target.getY() - pos.getY(), 0);
         playerDirection = new Vector(playerDirection.getX() / playerDirection.getNorma() * getVelX(),
                 playerDirection.getY() / playerDirection.getNorma() * getVelX(), 0);
@@ -39,7 +40,7 @@ public class Ghost extends GameObject implements Serializable {
         setX(getX() + playerDirection.getX());
         setY(getY() + playerDirection.getY());
 
-        if (getVelX() > 0) {
+        if (playerDirection.getX() < 0) {
             facing = Facing.RIGHT;
         } else {
             facing = Facing.LEFT;

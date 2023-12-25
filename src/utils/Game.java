@@ -96,19 +96,10 @@ public class Game {
 
     public void update() {
         synchronized (entities) {
-
             spawnGhost();
 
             entities.sort(Comparator.comparingDouble(GameObject::getZ));
-
-            entities.forEach(gameObject -> {
-            if (gameObject instanceof Ghost) {
-                ((Ghost) gameObject).followPlayer();
-            }
-                synchronized (this) {
-                    gameObject.update();
-                }
-            });
+            entities.forEach(GameObject::update);
 
             checkPlayerDeath();
             checkToDestroyed();
@@ -188,4 +179,20 @@ public class Game {
             }
         }
     }
+
+    public void updateSounds() {
+        synchronized (entities) {
+            for (GameObject go : entities) {
+                if (go instanceof Campfire) {
+                    if (go.distance(player) < Campfire.FIRE_RENDER_SOUND_DISTANCE) {
+                        go.setRenderSound(true);
+                        go.setDistaceVolume((Campfire.FIRE_RENDER_SOUND_DISTANCE - go.distance(player)) / Campfire.FIRE_RENDER_SOUND_DISTANCE * 100);
+                    } else {
+                        go.setRenderSound(false);
+                    }
+                }
+            }
+        }
+    }
+
 }

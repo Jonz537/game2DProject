@@ -13,7 +13,10 @@ public class GameObject implements Serializable {
 
     protected Vector pos, vel = new Vector(0,0,0);
     protected int size;
-    public double accX = 0., accY = 0.3;
+    public double accX = 0., accY = 0.06;
+
+    private boolean renderSound = false;
+    private double distaceVolume = 0;
 
     protected Rectangle2D.Double collisionBox;
     protected String imageRef;
@@ -119,6 +122,14 @@ public class GameObject implements Serializable {
         return Point.distance(pos.getX(), pos.getY(), go.getX(), go.getY());
     }
 
+    public boolean isRenderSound() {
+        return renderSound;
+    }
+
+    public void setRenderSound(boolean renderSound) {
+        this.renderSound = renderSound;
+    }
+
     public void update() {
 
     }
@@ -164,5 +175,13 @@ public class GameObject implements Serializable {
                 ", accY=" + accY +
                 ", imageRef='" + imageRef + '\'' +
                 '}';
+    }
+
+    public double getDistaceVolume() {
+        return distaceVolume;
+    }
+
+    public void setDistaceVolume(double distaceVolume) {
+        this.distaceVolume = distaceVolume;
     }
 }

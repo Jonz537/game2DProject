@@ -84,4 +84,8 @@ public class GameController {
     public void updateImages() {
         model.updateImages();
     }
+
+    public void updateSounds() {
+        model.updateSounds();
+    }
 }

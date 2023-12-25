@@ -13,6 +13,8 @@ public class Campfire extends GameObject implements Serializable {
     private final double lightRadius;
     private int currentFrame;
 
+    public static int FIRE_RENDER_SOUND_DISTANCE = 800;
+
     public Campfire(Campfire campfire) {
         super(campfire);
         this.lightRadius = campfire.lightRadius;
@@ -27,6 +29,8 @@ public class Campfire extends GameObject implements Serializable {
 
         imageRef = "./assets/fire/fire_" + currentFrame + ".png";
     }
+
+
 
     @Override
     public void animate() {
